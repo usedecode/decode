@@ -1,8 +1,8 @@
 {
   "name": "@acco/decode",
-  "version": "0.1.12",
+  "version": "0.1.15",
   "description": "Client for usedecode.com",
-  "main": "./dist/index.js",
+  "main": "./dist/decode.js",
   "types": "./dist/index.d.ts",
   "authors": [
     "Anthony Accomazzo",
@@ -10,7 +10,8 @@
   ],
   "license": "MIT",
   "scripts": {
-    "build": "tsc --outDir dist/lib --declaration true && rollup -c",
+    "build-ts": "tsc --emitDeclarationOnly true --declaration true --outDir dist",
+    "build": "rm -rf dist && rollup -c && yarn build-ts",
     "prepare": "npm run build"
   },
   "source": [
@@ -23,9 +24,6 @@
   ],
   "peerDependencies": {
     "react": ">=16.8.1"
-  },
-  "alias": {
-    "react": "./node_modules/react"
   },
   "devDependencies": {
     "@babel/core": "^7.10.1",
