@@ -1,6 +1,6 @@
 {
   "name": "@acco/decode",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "description": "Client for usedecode.com",
   "main": "./dist/decode.js",
   "types": "./dist/index.d.ts",
@@ -24,6 +24,9 @@
   ],
   "peerDependencies": {
     "react": ">=16.8.1"
+  },
+  "alias": {
+    "react": "./node_modules/react"
   },
   "devDependencies": {
     "@babel/core": "^7.10.1",
