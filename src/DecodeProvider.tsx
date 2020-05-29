@@ -1,6 +1,27 @@
 import React, { useContext, useEffect, useState } from "react";
+import Loading from "Loading";
 
 const code_param_name = "__decode_code";
+const localStorageKey = "decode:v0.1";
+const oneDay = 86400000;
+
+let getLocalStorage = () => localStorage.getItem(localStorageKey);
+let setLocalStorage = (token: string) =>
+  localStorage.setItem(
+    localStorageKey,
+    JSON.stringify({ token, exp: Date.now() + oneDay * 7 })
+  );
+let fetchTokenIfNotExpiringSoon = () => {
+  let stored = getLocalStorage();
+  if (stored) {
+    try {
+      let { token, exp } = JSON.parse(stored);
+      if (exp - Date.now() > oneDay) {
+        return token;
+      }
+    } catch (e) {}
+  }
+};
 
 interface Context {
   token: string;
@@ -17,34 +38,27 @@ let DecodeProvider: React.FC<Props> = ({ children }) => {
 
   useEffect(() => {
     let doEffect = async () => {
-      let s = window.location.search;
+      let storedToken = fetchTokenIfNotExpiringSoon();
       let { [code_param_name]: code, ...rest } = getParams();
-      if (!code) {
-        window.location.href = `https://api.usedecode.com/auth/start?redirect_url=${window.location.href}`;
-      } else {
+      if (code) {
         let token = await exchangeCode(code as string);
         setToken(token);
+        setLocalStorage(token);
         let { origin, pathname } = window.location;
         let search = encodeParams(rest);
         let url = search ? origin + pathname + "?" + search : origin + pathname;
         window.history.pushState({}, "", url);
+      } else if (storedToken) {
+        setToken(storedToken);
+      } else {
+        window.location.href = `https://api.usedecode.com/auth/start?redirect_url=${window.location.href}`;
       }
     };
     doEffect();
   }, []);
 
   if (!token) {
-    return (
-      <p
-        style={{
-          fontFamily: `apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
-      'Noto Sans', sans-serif`,
-          color: "#d9d9d9",
-        }}
-      >
-        Loading...
-      </p>
-    );
+    return <Loading msg="Logging you in..." />;
   }
 
   return (
