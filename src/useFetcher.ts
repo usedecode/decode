@@ -2,6 +2,18 @@ import Errors from "./errors";
 import { useToken } from "DecodeProvider";
 
 type DecodeParams = { [k: string]: string | number | string[] | number[] };
+export type transformFn<Data> = (...args: any) => Data | Promise<Data>;
+
+export function useFetcher<Data>(postProcessor?: transformFn<Data>) {
+  let token = useToken();
+  return async (slug: string, params?: DecodeParams) => {
+    let res = await fetcher(slug, token, params);
+    if (postProcessor) {
+      return postProcessor(res);
+    }
+    return res;
+  };
+}
 
 export let getFetcher = (token: string) => (
   slug: string,
