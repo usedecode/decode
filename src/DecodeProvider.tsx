@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import Loading from "Loading";
+import { ConfigInterface, SWRConfig } from "swr";
 
 const code_param_name = "__decode_code";
 const localStorageKey = "decode:v0.1";
@@ -31,9 +32,11 @@ export const DecodeContext = React.createContext<Context>({
   token: "",
 });
 
-interface Props {}
+interface Props {
+  config?: ConfigInterface;
+}
 
-let DecodeProvider: React.FC<Props> = ({ children }) => {
+let DecodeProvider: React.FC<Props> = ({ config, children }) => {
   let [token, setToken] = useState("");
 
   useEffect(() => {
@@ -63,7 +66,7 @@ let DecodeProvider: React.FC<Props> = ({ children }) => {
 
   return (
     <DecodeContext.Provider value={{ token }}>
-      {children}
+      <SWRConfig value={config ?? {}}>{children}</SWRConfig>
     </DecodeContext.Provider>
   );
 };
