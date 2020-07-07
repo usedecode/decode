@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { useFetcher } from "./useFetcher";
 import useSWR, { responseInterface, ConfigInterface } from "swr";
 import { transformFn, DecodeParams } from "types";
@@ -24,8 +24,8 @@ function useDecode<Data = any, Error = any>(
   ...args: any[]
 ): responseInterface<Data, Error> {
   let firstArg: FirstArg,
-    fn: transformFn<Data> | undefined,
-    config: ConfigInterface<Data, Error> = {},
+    fn: transformFn<Data> | undefined | null,
+    config: undefined | ConfigInterface<Data, Error> = {},
     key: SWRKey,
     params: DecodeParams | null,
     paramsFingerprint: string | null;
@@ -46,6 +46,10 @@ function useDecode<Data = any, Error = any>(
     return params;
   }, [paramsFingerprint]);
 
+  if (exceedsThrottleLimit()) {
+    debugger;
+  }
+
   if (args.length > 2) {
     fn = args[1];
     config = args[2];
@@ -62,6 +66,22 @@ function useDecode<Data = any, Error = any>(
 
   return useSWR(useSWRFirstArg, fetcher, config);
 }
+
+let exceedsThrottleLimit = () => {
+  let recentInvocationTimestamps = useRef<number[]>([]);
+  recentInvocationTimestamps.current = recentInvocationTimestamps.current
+    .filter((ts) => {
+      return Date.now() - ts < 500;
+    })
+    .concat(Date.now());
+  if (recentInvocationTimestamps.current.length > 12) {
+    return true;
+    // throw new Error(
+    //   `useDecode() was invoked way too many times in rapid succession. This is likely a bug with the library. Please let us know!`
+    // );
+  }
+  return false;
+};
 
 let fingerprintParams = (params: { [k: string]: unknown }) => {
   let invalidParams = Object.keys(params).filter((k) => {

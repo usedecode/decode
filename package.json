@@ -1,6 +1,6 @@
 {
-  "name": "@acco/decode",
-  "version": "0.1.44",
+  "name": "@decode/client",
+  "version": "0.1.0",
   "description": "Client for usedecode.com",
   "main": "./dist/decode.js",
   "types": "./dist/index.d.ts",
@@ -36,7 +36,6 @@
     "jest": "^26.0.1",
     "react": "^16.8.1",
     "rollup": "^2.11.0",
-    "tslib": "^2.0.0",
     "typescript": "^3.9.3"
   },
   "dependencies": {
