@@ -36,7 +36,8 @@
     "jest": "^26.0.1",
     "react": "^16.8.1",
     "rollup": "^2.11.0",
-    "typescript": "^3.9.3"
+    "typescript": "^3.9.3",
+    "tslib": "^2.0.0"
   },
   "dependencies": {
     "jshashes": "h2non/jshashes",
