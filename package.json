@@ -1,6 +1,6 @@
 {
   "name": "@acco/decode",
-  "version": "0.1.43",
+  "version": "0.1.44",
   "description": "Client for usedecode.com",
   "main": "./dist/decode.js",
   "types": "./dist/index.d.ts",
