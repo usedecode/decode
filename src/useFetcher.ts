@@ -20,8 +20,9 @@ export let getFetcher = (token: string) => (
   return fetcher(slug, token, params);
 };
 
-interface DecodeMutationParams extends DecodeParams {
+interface DecodeMutationParams {
   slug: string;
+  [k: string]: string | number | string[] | number[];
 }
 
 export function mutationDecode(params: DecodeMutationParams) {
@@ -36,13 +37,14 @@ export function mutationDecode(params: DecodeMutationParams) {
 }
 
 let fetcher = async (slug: string, token: string, params?: DecodeParams) => {
+  let body = typeof params === "string" ? params : JSON.stringify(params ?? {});
   let res = await fetch(`https://api.usedecode.com/e/${slug}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(params ?? {}),
+    body,
   });
   let json = null;
   try {

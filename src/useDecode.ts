@@ -27,24 +27,16 @@ function useDecode<Data = any, Error = any>(
     fn: transformFn<Data> | undefined | null,
     config: undefined | ConfigInterface<Data, Error> = {},
     key: SWRKey,
-    params: DecodeParams | null,
-    paramsFingerprint: string | null;
+    params: DecodeParams | null;
 
   firstArg = args[0];
   if (Array.isArray(firstArg)) {
     key = firstArg[0];
     params = firstArg[1];
-    paramsFingerprint = fingerprintParams(params);
   } else {
     key = firstArg;
     params = null;
-    paramsFingerprint = null;
   }
-  let memoizedParams = useMemo(() => {
-    if (!params) return null;
-
-    return params;
-  }, [paramsFingerprint]);
 
   if (exceedsThrottleLimit()) {
     debugger;
@@ -62,7 +54,7 @@ function useDecode<Data = any, Error = any>(
   }
   let fetcher = fn ? useFetcher(fn) : useFetcher();
 
-  let useSWRFirstArg = memoizedParams ? [key, memoizedParams] : key;
+  let useSWRFirstArg = params ? [key, JSON.stringify(params)] : key;
 
   return useSWR(useSWRFirstArg, fetcher, config);
 }
@@ -71,10 +63,10 @@ let exceedsThrottleLimit = () => {
   let recentInvocationTimestamps = useRef<number[]>([]);
   recentInvocationTimestamps.current = recentInvocationTimestamps.current
     .filter((ts) => {
-      return Date.now() - ts < 500;
+      return Date.now() - ts < 2000;
     })
     .concat(Date.now());
-  if (recentInvocationTimestamps.current.length > 12) {
+  if (recentInvocationTimestamps.current.length > 10) {
     return true;
     // throw new Error(
     //   `useDecode() was invoked way too many times in rapid succession. This is likely a bug with the library. Please let us know!`
