@@ -9,14 +9,14 @@ type SWRKey = string | KeyFunction;
 type FirstArg = SWRKey | [string, DecodeParams];
 
 function useDecode<Data = any, Error = any>(
-  key: SWRKey
+  firstArg: FirstArg
 ): responseInterface<Data, Error>;
 function useDecode<Data = any, Error = any>(
-  key: SWRKey,
+  firstArg: FirstArg,
   config?: ConfigInterface<Data, Error>
 ): responseInterface<Data, Error>;
 function useDecode<Data = any, Error = any>(
-  key: SWRKey,
+  firstArg: FirstArg,
   fn?: transformFn<Data>,
   config?: ConfigInterface<Data, Error>
 ): responseInterface<Data, Error>;
