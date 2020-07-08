@@ -1,20 +1,12 @@
-import { useMemo, useRef, useCallback } from "react";
+import { useMemo, useRef } from "react";
 import { useFetcher } from "./useFetcher";
 import useSWR, { responseInterface, ConfigInterface } from "swr";
-import debounce from "lodash.debounce";
 import { transformFn, DecodeParams } from "types";
 import Hashes from "jshashes";
 
 type KeyFunction = () => string | [string, DecodeParams];
 type SWRKey = string | KeyFunction;
-type FirstArg =
-  | SWRKey
-  | [string, DecodeParams]
-  | [string, DecodeParams, Options];
-
-interface Options {
-  debounce?: number;
-}
+type FirstArg = SWRKey | [string, DecodeParams];
 
 function useDecode<Data = any, Error = any>(
   key: SWRKey
@@ -35,27 +27,16 @@ function useDecode<Data = any, Error = any>(
     fn: transformFn<Data> | undefined | null,
     config: undefined | ConfigInterface<Data, Error> = {},
     key: SWRKey,
-    params: DecodeParams | null,
-    opts: Options | null;
+    params: DecodeParams | null;
 
   firstArg = args[0];
   if (Array.isArray(firstArg)) {
     key = firstArg[0];
     params = firstArg[1];
-    opts = firstArg[2] ?? null;
   } else {
     key = firstArg;
     params = null;
-    opts = null;
   }
-
-  let debounceFor = opts?.debounce ? opts.debounce : 0;
-  let debouncedParams = useRef(
-    debounce((p: DecodeParams) => JSON.stringify(p), debounceFor, {
-      leading: false,
-      trailing: true,
-    })
-  );
 
   if (exceedsThrottleLimit()) {
     debugger;
@@ -73,8 +54,7 @@ function useDecode<Data = any, Error = any>(
   }
   let fetcher = fn ? useFetcher(fn) : useFetcher();
 
-  let stringified = params && debouncedParams.current(params);
-  let useSWRFirstArg = stringified ? [key, stringified] : key;
+  let useSWRFirstArg = params ? [key, JSON.stringify(params)] : key;
 
   return useSWR(useSWRFirstArg, fetcher, config);
 }
