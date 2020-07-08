@@ -52,11 +52,11 @@ function useDecode<Data = any, Error = any>(
       config = args[1];
     }
   }
-  let fetcher = fn ? useFetcher(fn) : useFetcher();
+  let fetcher = fn ? useFetcher<Data>(fn) : useFetcher();
 
   let useSWRFirstArg = params ? [key, JSON.stringify(params)] : key;
 
-  return useSWR(useSWRFirstArg, fetcher, config);
+  return useSWR<Data, Error>(useSWRFirstArg, fetcher, config);
 }
 
 let exceedsThrottleLimit = () => {
