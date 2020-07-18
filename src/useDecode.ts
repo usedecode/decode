@@ -4,7 +4,7 @@ import useSWR, { responseInterface, ConfigInterface } from "swr";
 import { transformFn, DecodeParams } from "types";
 import Hashes from "jshashes";
 
-type KeyFunction = () => string | [string, DecodeParams];
+type KeyFunction = () => string | [string, DecodeParams] | null;
 type SWRKey = string | KeyFunction;
 type FirstArg = SWRKey | [string, DecodeParams];
 
