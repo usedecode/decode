@@ -5,8 +5,8 @@ import { transformFn, DecodeParams } from "types";
 import Hashes from "jshashes";
 
 type KeyFunction = () => string | [string, DecodeParams] | null;
-type SWRKey = string | KeyFunction;
-type FirstArg = SWRKey | [string, DecodeParams];
+type SWRKey = string | KeyFunction | null;
+type FirstArg = SWRKey | [string, DecodeParams] | KeyFunction;
 
 function useDecode<Data = any, Error = any>(
   firstArg: FirstArg
@@ -25,18 +25,9 @@ function useDecode<Data = any, Error = any>(
 ): responseInterface<Data, Error> {
   let firstArg: FirstArg,
     fn: transformFn<Data> | undefined | null,
-    config: undefined | ConfigInterface<Data, Error> = {},
-    key: SWRKey,
-    params: DecodeParams | null;
+    config: undefined | ConfigInterface<Data, Error> = {};
 
-  firstArg = args[0];
-  if (Array.isArray(firstArg)) {
-    key = firstArg[0];
-    params = firstArg[1];
-  } else {
-    key = firstArg;
-    params = null;
-  }
+  let [key, params] = parseFirstArg(args[0]);
 
   if (exceedsThrottleLimit()) {
     debugger;
@@ -73,6 +64,30 @@ let exceedsThrottleLimit = () => {
     // );
   }
   return false;
+};
+
+let parseFirstArg = (arg: FirstArg): [SWRKey, DecodeParams | null] => {
+  let key: SWRKey, params: DecodeParams | null;
+  if (typeof arg === "function") {
+    try {
+      arg = arg();
+    } catch (err) {
+      // dependencies not ready
+      key = "";
+      return [key, null];
+    }
+
+    return parseFirstArg(arg);
+  }
+
+  if (Array.isArray(arg)) {
+    key = arg[0];
+    params = arg[1];
+  } else {
+    key = arg;
+    params = null;
+  }
+  return [key, params];
 };
 
 let fingerprintParams = (params: { [k: string]: unknown }) => {
