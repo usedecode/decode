@@ -1,6 +1,7 @@
 import Errors from "./errors";
 import { useToken } from "DecodeProvider";
 import { DecodeParams, transformFn } from "types";
+import { useRef } from "react";
 
 // Would like this to use something like this, but alas:
 // https://github.com/microsoft/TypeScript/issues/17867
@@ -11,7 +12,16 @@ import { DecodeParams, transformFn } from "types";
 
 export function useFetcher<Data>(postProcessor?: transformFn<Data>) {
   let token = useToken();
+  // used to prevent runaway fetching in development
+  let recentFetchesTimestamps = useRef<number[]>([]);
   return async (slug: string, params?: object) => {
+    recentFetchesTimestamps.current = recentFetchesTimestamps.current
+      .filter((ts) => {
+        return Date.now() - ts < 2000;
+      })
+      .concat(Date.now());
+    checkThrottle(recentFetchesTimestamps.current);
+
     let result = await fetcher(slug, token, params);
     if (postProcessor) {
       return postProcessor(result);
@@ -19,6 +29,14 @@ export function useFetcher<Data>(postProcessor?: transformFn<Data>) {
     return result;
   };
 }
+
+let checkThrottle = (ts: number[]) => {
+  if (ts.length > 10) {
+    throw new Error(
+      `Fetches to Decode were invoked way too many times in rapid succession. This is likely a bug with the library. Please let us know!`
+    );
+  }
+};
 
 let fetcher = async (slug: string, token: string, params?: unknown) => {
   let body = typeof params === "string" ? params : JSON.stringify(params ?? {});

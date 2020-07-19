@@ -27,10 +27,6 @@ function useDecode<Data = any, Error = any>(
 
   let [key, params] = parseFirstArg(args[0]);
 
-  if (exceedsThrottleLimit()) {
-    debugger;
-  }
-
   if (args.length > 2) {
     fn = args[1];
     config = args[2];
@@ -47,22 +43,6 @@ function useDecode<Data = any, Error = any>(
 
   return useSWR<Data, Error>(useSWRFirstArg, fetcher, config);
 }
-
-let exceedsThrottleLimit = () => {
-  let recentInvocationTimestamps = useRef<number[]>([]);
-  recentInvocationTimestamps.current = recentInvocationTimestamps.current
-    .filter((ts) => {
-      return Date.now() - ts < 2000;
-    })
-    .concat(Date.now());
-  if (recentInvocationTimestamps.current.length > 10) {
-    return true;
-    // throw new Error(
-    //   `useDecode() was invoked way too many times in rapid succession. This is likely a bug with the library. Please let us know!`
-    // );
-  }
-  return false;
-};
 
 let parseFirstArg = (arg: FirstArg): [SWRKey, DecodeParams | null] => {
   let key: SWRKey, params: DecodeParams | null;
