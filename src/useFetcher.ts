@@ -2,14 +2,16 @@ import Errors from "./errors";
 import { useToken } from "DecodeProvider";
 import { DecodeParams, transformFn } from "types";
 
-interface DecodeParamsWithBody {
-  body: any;
-  [k: string]: string | number | string[] | number[];
-}
+// Would like this to use something like this, but alas:
+// https://github.com/microsoft/TypeScript/issues/17867
+// interface DecodeParamsWithBody {
+//   body: any;
+//   [key: string]: string | number | string[] | number[];
+// }
 
 export function useFetcher<Data>(postProcessor?: transformFn<Data>) {
   let token = useToken();
-  return async (slug: string, params?: DecodeParams | DecodeParamsWithBody) => {
+  return async (slug: string, params?: object) => {
     let result = await fetcher(slug, token, params);
     if (postProcessor) {
       return postProcessor(result);
@@ -18,30 +20,7 @@ export function useFetcher<Data>(postProcessor?: transformFn<Data>) {
   };
 }
 
-export let getFetcher = (token: string) => (
-  slug: string,
-  params?: DecodeParams
-) => {
-  return fetcher(slug, token, params);
-};
-
-interface DecodeMutationParams {
-  slug: string;
-  [k: string]: string | number | string[] | number[];
-}
-
-export function mutationDecode(params: DecodeMutationParams) {
-  let { slug, ...rest } = params;
-  if (!slug) {
-    throw new Error(
-      "Object passed to `mutationDecode` must include a `slug` property"
-    );
-  }
-  let token = useToken();
-  return fetcher(slug, token, rest);
-}
-
-let fetcher = async (slug: string, token: string, params?: DecodeParams) => {
+let fetcher = async (slug: string, token: string, params?: unknown) => {
   let body = typeof params === "string" ? params : JSON.stringify(params ?? {});
   let res = await fetch(`https://api.usedecode.com/e/${slug}`, {
     method: "POST",
