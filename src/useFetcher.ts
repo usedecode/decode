@@ -1,6 +1,6 @@
 import Errors from "./errors";
 import { useToken } from "DecodeProvider";
-import { DecodeParams, TransformFn } from "types";
+import { TransformFn } from "./useDecode";
 import { useRef } from "react";
 
 // Would like this to use something like this, but alas:

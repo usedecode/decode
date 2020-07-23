@@ -1,7 +1,13 @@
 import { useRef } from "react";
 import { useFetcher } from "./useFetcher";
 import useSWR, { responseInterface, ConfigInterface } from "swr";
-import { TransformFn, DecodeParams } from "types";
+
+export type TransformFn<Data> = (data: Data) => any | Promise<any>;
+export type DecodeParams =
+  | {
+      [k: string]: string | number | string[] | number[];
+    }
+  | string;
 
 type KeyFunction = () => string | [string, DecodeParams] | null;
 type SWRKey = string | KeyFunction | null;
