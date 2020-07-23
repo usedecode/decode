@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useFetcher } from "./useFetcher";
 import useSWR, { responseInterface, ConfigInterface } from "swr";
-import { transformFn, DecodeParams } from "types";
+import { TransformFn, DecodeParams } from "types";
 
 type KeyFunction = () => string | [string, DecodeParams] | null;
 type SWRKey = string | KeyFunction | null;
@@ -16,13 +16,13 @@ function useDecode<Data = any, Error = any>(
 ): responseInterface<Data, Error>;
 function useDecode<Data = any, Error = any>(
   firstArg: FetchKey,
-  fn?: transformFn<Data>,
+  fn?: TransformFn<Data>,
   config?: ConfigInterface<Data, Error>
 ): responseInterface<Data, Error>;
 function useDecode<Data = any, Error = any>(
   ...args: any[]
 ): responseInterface<Data, Error> {
-  let fn: transformFn<Data> | undefined | null,
+  let fn: TransformFn<Data> | undefined | null,
     config: undefined | ConfigInterface<Data, Error> = {};
 
   let [key, params] = parseFirstArg(args[0]);

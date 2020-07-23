@@ -1,6 +1,6 @@
 import Errors from "./errors";
 import { useToken } from "DecodeProvider";
-import { DecodeParams, transformFn } from "types";
+import { DecodeParams, TransformFn } from "types";
 import { useRef } from "react";
 
 // Would like this to use something like this, but alas:
@@ -10,7 +10,7 @@ import { useRef } from "react";
 //   [key: string]: string | number | string[] | number[];
 // }
 
-export function useFetcher<Data>(postProcessor?: transformFn<Data>) {
+export function useFetcher<Data>(postProcessor?: TransformFn<Data>) {
   let token = useToken();
   // used to prevent runaway fetching in development
   let recentFetchesTimestamps = useRef<number[]>([]);
