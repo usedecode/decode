@@ -2,7 +2,9 @@ import { useRef } from "react";
 import { useFetcher } from "./useFetcher";
 import useSWR, { responseInterface, ConfigInterface } from "swr";
 
-export type TransformFn<Data> = (data: Data) => any | Promise<any>;
+export type TransformFn<Data, TransformedData> = (
+  data: Data
+) => TransformedData | Promise<TransformedData>;
 export type DecodeParams =
   | {
       [k: string]: string | number | string[] | number[];
@@ -20,15 +22,15 @@ function useDecode<Data = any, Error = any>(
   firstArg: FetchKey,
   config?: ConfigInterface<Data, Error>
 ): responseInterface<Data, Error>;
-function useDecode<Data = any, Error = any>(
+function useDecode<Data = any, Error = any, TransformedData = any>(
   firstArg: FetchKey,
-  fn?: TransformFn<Data>,
+  fn?: TransformFn<Data, TransformedData>,
   config?: ConfigInterface<Data, Error>
-): responseInterface<Data, Error>;
-function useDecode<Data = any, Error = any>(
+): responseInterface<TransformedData, Error>;
+function useDecode<Data = any, Error = any, TransformedData = any>(
   ...args: any[]
-): responseInterface<Data, Error> {
-  let fn: TransformFn<Data> | undefined | null,
+) {
+  let fn: TransformFn<Data, TransformedData> | undefined | null,
     config: undefined | ConfigInterface<Data, Error> = {};
 
   let [key, params] = parseFirstArg(args[0]);
@@ -43,7 +45,7 @@ function useDecode<Data = any, Error = any>(
       config = args[1];
     }
   }
-  let fetcher = fn ? useFetcher<Data>(fn) : useFetcher();
+  let fetcher = fn ? useFetcher<Data, TransformedData>(fn) : useFetcher();
 
   let useSWRFirstArg = params ? [key, JSON.stringify(params)] : key;
 

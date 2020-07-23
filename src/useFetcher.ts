@@ -10,7 +10,9 @@ import { useRef } from "react";
 //   [key: string]: string | number | string[] | number[];
 // }
 
-export function useFetcher<Data>(postProcessor?: TransformFn<Data>) {
+export function useFetcher<Data, TransformedData = any>(
+  postProcessor?: TransformFn<Data, TransformedData>
+) {
   let token = useToken();
   // used to prevent runaway fetching in development
   let recentFetchesTimestamps = useRef<number[]>([]);
