@@ -5,33 +5,27 @@ import useSWR, { responseInterface, ConfigInterface } from "swr";
 export type TransformFn<Data, TransformedData> = (
   data: Data
 ) => TransformedData | Promise<TransformedData>;
-export type DecodeParams =
-  | {
-      [k: string]: string | number | string[] | number[];
-    }
-  | string;
+export type DecodeParams = object | string;
 
 type KeyFunction = () => string | [string, DecodeParams] | null;
 type SWRKey = string | KeyFunction | null;
 export type FetchKey = SWRKey | [string, DecodeParams] | KeyFunction;
 
-function useDecode<Data = any, Error = any>(
+function useDecode<Data = any>(
   firstArg: FetchKey
-): responseInterface<Data, Error>;
-function useDecode<Data = any, Error = any>(
+): responseInterface<Data, any>;
+function useDecode<Data = any>(
   firstArg: FetchKey,
-  config?: ConfigInterface<Data, Error>
-): responseInterface<Data, Error>;
-function useDecode<Data = any, Error = any, TransformedData = any>(
+  config?: ConfigInterface<Data>
+): responseInterface<Data, any>;
+function useDecode<Data = any, TransformedData = any>(
   firstArg: FetchKey,
   fn?: TransformFn<Data, TransformedData>,
-  config?: ConfigInterface<Data, Error>
-): responseInterface<TransformedData, Error>;
-function useDecode<Data = any, Error = any, TransformedData = any>(
-  ...args: any[]
-) {
+  config?: ConfigInterface<Data>
+): responseInterface<TransformedData, any>;
+function useDecode<Data = any, TransformedData = any>(...args: any[]) {
   let fn: TransformFn<Data, TransformedData> | undefined | null,
-    config: undefined | ConfigInterface<Data, Error> = {};
+    config: undefined | ConfigInterface<Data> = {};
 
   let [key, params] = parseFirstArg(args[0]);
 
@@ -49,7 +43,7 @@ function useDecode<Data = any, Error = any, TransformedData = any>(
 
   let useSWRFirstArg = params ? [key, JSON.stringify(params)] : key;
 
-  return useSWR<Data, Error>(useSWRFirstArg, fetcher, config);
+  return useSWR<Data>(useSWRFirstArg, fetcher, config);
 }
 
 let parseFirstArg = (arg: FetchKey): [SWRKey, DecodeParams | null] => {
