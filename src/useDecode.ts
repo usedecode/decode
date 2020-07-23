@@ -18,11 +18,11 @@ function useDecode<Data = any>(
   firstArg: FetchKey,
   config?: ConfigInterface<Data>
 ): responseInterface<Data, any>;
-function useDecode<Data = any, TransformedData = any>(
+function useDecode<Data = any>(
   firstArg: FetchKey,
-  fn?: TransformFn<Data, TransformedData>,
+  fn: TransformFn<Data, unknown>,
   config?: ConfigInterface<Data>
-): responseInterface<TransformedData, any>;
+): responseInterface<ReturnType<typeof fn>, any>;
 function useDecode<Data = any, TransformedData = any>(...args: any[]) {
   let fn: TransformFn<Data, TransformedData> | undefined | null,
     config: undefined | ConfigInterface<Data> = {};
