@@ -5,17 +5,17 @@ import { transformFn, DecodeParams } from "types";
 
 type KeyFunction = () => string | [string, DecodeParams] | null;
 type SWRKey = string | KeyFunction | null;
-type FirstArg = SWRKey | [string, DecodeParams] | KeyFunction;
+export type FetchKey = SWRKey | [string, DecodeParams] | KeyFunction;
 
 function useDecode<Data = any, Error = any>(
-  firstArg: FirstArg
+  firstArg: FetchKey
 ): responseInterface<Data, Error>;
 function useDecode<Data = any, Error = any>(
-  firstArg: FirstArg,
+  firstArg: FetchKey,
   config?: ConfigInterface<Data, Error>
 ): responseInterface<Data, Error>;
 function useDecode<Data = any, Error = any>(
-  firstArg: FirstArg,
+  firstArg: FetchKey,
   fn?: transformFn<Data>,
   config?: ConfigInterface<Data, Error>
 ): responseInterface<Data, Error>;
@@ -44,7 +44,7 @@ function useDecode<Data = any, Error = any>(
   return useSWR<Data, Error>(useSWRFirstArg, fetcher, config);
 }
 
-let parseFirstArg = (arg: FirstArg): [SWRKey, DecodeParams | null] => {
+let parseFirstArg = (arg: FetchKey): [SWRKey, DecodeParams | null] => {
   let key: SWRKey, params: DecodeParams | null;
   if (typeof arg === "function") {
     try {
