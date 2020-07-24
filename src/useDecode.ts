@@ -2,30 +2,26 @@ import { useRef } from "react";
 import { useFetcher } from "./useFetcher";
 import useSWR, { responseInterface, ConfigInterface } from "swr";
 
-export type TransformFn<Data, TransformedData> = (
-  data: Data
-) => TransformedData | Promise<TransformedData>;
+export type TransformFn<D, R> = (data: D) => R | Promise<R>;
 export type DecodeParams = object | string;
 
 type KeyFunction = () => string | [string, DecodeParams] | null;
 type SWRKey = string | KeyFunction | null;
 export type FetchKey = SWRKey | [string, DecodeParams] | KeyFunction;
 
-function useDecode<Data = any>(
-  firstArg: FetchKey
-): responseInterface<Data, any>;
-function useDecode<Data = any>(
+function useDecode<D = any>(firstArg: FetchKey): responseInterface<D, any>;
+function useDecode<D = any>(
   firstArg: FetchKey,
-  config?: ConfigInterface<Data>
-): responseInterface<Data, any>;
-function useDecode<Data = any>(
+  config?: ConfigInterface<D>
+): responseInterface<D, any>;
+function useDecode<D = any, R = any>(
   firstArg: FetchKey,
-  fn: TransformFn<Data, unknown>,
-  config?: ConfigInterface<Data>
-): responseInterface<ReturnType<typeof fn>, any>;
-function useDecode<Data = any, TransformedData = any>(...args: any[]) {
-  let fn: TransformFn<Data, TransformedData> | undefined | null,
-    config: undefined | ConfigInterface<Data> = {};
+  fn?: TransformFn<D, R>,
+  config?: ConfigInterface<D>
+): responseInterface<R, any>;
+function useDecode<D = any, R = any>(...args: any[]) {
+  let fn: TransformFn<D, R> | undefined | null,
+    config: undefined | ConfigInterface<D> = {};
 
   let [key, params] = parseFirstArg(args[0]);
 
@@ -39,11 +35,11 @@ function useDecode<Data = any, TransformedData = any>(...args: any[]) {
       config = args[1];
     }
   }
-  let fetcher = fn ? useFetcher<Data, TransformedData>(fn) : useFetcher();
+  let fetcher = fn ? useFetcher<D, R>(fn) : useFetcher();
 
   let useSWRFirstArg = params ? [key, JSON.stringify(params)] : key;
 
-  return useSWR<Data>(useSWRFirstArg, fetcher, config);
+  return useSWR<D>(useSWRFirstArg, fetcher, config);
 }
 
 let parseFirstArg = (arg: FetchKey): [SWRKey, DecodeParams | null] => {
@@ -70,4 +66,4 @@ let parseFirstArg = (arg: FetchKey): [SWRKey, DecodeParams | null] => {
   return [key, params];
 };
 
-export { useDecode };
+export default useDecode;
