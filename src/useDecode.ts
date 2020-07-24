@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import { useFetcher } from "./useFetcher";
 import useSWR, { responseInterface, ConfigInterface } from "swr";
 
