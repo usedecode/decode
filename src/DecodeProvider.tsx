@@ -34,20 +34,34 @@ export const DecodeContext = React.createContext<Context>({
 });
 
 interface Props {
-  config?: ConfigInterface;
+  swrConfig?: ConfigInterface;
+  cacheDecodeToken?: boolean;
 }
 
-let DecodeProvider: React.FC<Props> = ({ config, children }) => {
+let DecodeProvider: React.FC<Props> = ({
+  swrConfig,
+  cacheDecodeToken,
+  children,
+}) => {
   let [token, setToken] = useState("");
+
+  if (cacheDecodeToken == undefined) {
+    if (process.env.NODE_ENV === "production") {
+      cacheDecodeToken = false;
+    } else {
+      cacheDecodeToken = true;
+    }
+  }
 
   useEffect(() => {
     let doEffect = async () => {
-      let storedToken = fetchTokenIfNotExpiringSoon();
+      let storedToken = cacheDecodeToken && fetchTokenIfNotExpiringSoon();
       let { [code_param_name]: code, ...rest } = getParams();
+
       if (code) {
         let token = await exchangeCode(code as string);
         setToken(token);
-        setLocalStorage(token);
+        cacheDecodeToken && setLocalStorage(token);
         let { origin, pathname } = window.location;
         let search = encodeParams(rest);
         let url = search ? origin + pathname + "?" + search : origin + pathname;
@@ -67,7 +81,7 @@ let DecodeProvider: React.FC<Props> = ({ config, children }) => {
 
   return (
     <DecodeContext.Provider value={{ token }}>
-      <SWRConfig value={config ?? {}}>{children}</SWRConfig>
+      <SWRConfig value={swrConfig ?? {}}>{children}</SWRConfig>
     </DecodeContext.Provider>
   );
 };
