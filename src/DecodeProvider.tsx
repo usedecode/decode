@@ -40,28 +40,28 @@ interface Props {
 
 let DecodeProvider: React.FC<Props> = ({
   swrConfig,
-  cacheDecodeToken,
+  cacheDecodeToken: cacheToken,
   children,
 }) => {
   let [token, setToken] = useState("");
 
-  if (cacheDecodeToken == undefined) {
+  if (cacheToken == undefined) {
     if (process.env.NODE_ENV === "production") {
-      cacheDecodeToken = false;
+      cacheToken = false;
     } else {
-      cacheDecodeToken = true;
+      cacheToken = true;
     }
   }
 
   useEffect(() => {
     let doEffect = async () => {
-      let storedToken = cacheDecodeToken && fetchTokenIfNotExpiringSoon();
+      let storedToken = cacheToken && fetchTokenIfNotExpiringSoon();
       let { [code_param_name]: code, ...rest } = getParams();
 
       if (code) {
         let token = await exchangeCode(code as string);
         setToken(token);
-        cacheDecodeToken && setLocalStorage(token);
+        cacheToken && setLocalStorage(token);
         let { origin, pathname } = window.location;
         let search = encodeParams(rest);
         let url = search ? origin + pathname + "?" + search : origin + pathname;
