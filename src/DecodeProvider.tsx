@@ -4,20 +4,21 @@ import { ConfigInterface, SWRConfig } from "swr";
 
 const code_param_name = "__decode_code";
 const localStorageKey = "decode:v0.1";
-const oneDay = 86400000;
+// const oneDay = 86400000;
+const oneMinute = 60_000;
 
 let getLocalStorage = () => localStorage.getItem(localStorageKey);
 let setLocalStorage = (token: string) =>
   localStorage.setItem(
     localStorageKey,
-    JSON.stringify({ token, exp: Date.now() + oneDay * 7 })
+    JSON.stringify({ token, exp: Date.now() + oneMinute * 120 })
   );
 let fetchTokenIfNotExpiringSoon = () => {
   let stored = getLocalStorage();
   if (stored) {
     try {
       let { token, exp } = JSON.parse(stored);
-      if (exp - Date.now() > oneDay) {
+      if (exp - Date.now() > oneMinute * 60) {
         return token;
       }
     } catch (e) {}
