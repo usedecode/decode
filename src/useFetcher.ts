@@ -72,7 +72,7 @@ let fetcher = async (slug: string, token: string, params?: unknown) => {
   return json;
 };
 
-let dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.?\d*Z$/;
+let dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.?\d*Z?$/;
 
 let timestampReviver = (_key: any, val: unknown) => {
   if (typeof val === "string" && dateFormat.test(val)) {
