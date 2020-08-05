@@ -1,6 +1,6 @@
 {
   "name": "@decode/client",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Client for usedecode.com",
   "main": "./dist/decode.js",
   "types": "./dist/index.d.ts",
