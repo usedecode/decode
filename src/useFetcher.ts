@@ -68,12 +68,5 @@ let fetcher = async (slug: string, token: string, params?: unknown) => {
     );
   }
 
-  if (!json) {
-    throw new Errors.UnexpectedError(
-      "Something went wrong :-( Decode returned a 200 but the body was unparsable",
-      { response: res, json: json }
-    );
-  }
-
   return json;
 };
