@@ -32,7 +32,7 @@ export function useFetcher<Data, TransformedData = any>(
       }
       return result;
     } catch (e) {
-      if (e instanceof Errors.NotAuthorized) {
+      if (e.name === "NotAuthorized") {
         onError(401);
       } else {
         throw e;
