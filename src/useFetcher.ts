@@ -1,5 +1,5 @@
 import Errors from "./errors";
-import { useToken } from "DecodeProvider";
+import { useToken, useOnError } from "DecodeProvider";
 import { TransformFn } from "./useDecode";
 import { useRef } from "react";
 
@@ -14,6 +14,7 @@ export function useFetcher<Data, TransformedData = any>(
   postProcessor?: TransformFn<Data, TransformedData>
 ) {
   let token = useToken();
+  let onError = useOnError();
   // used to prevent runaway fetching in development
   let recentFetchesTimestamps = useRef<number[]>([]);
   return async (slug: string, params?: object) => {
@@ -24,11 +25,19 @@ export function useFetcher<Data, TransformedData = any>(
       .concat(Date.now());
     checkThrottle(recentFetchesTimestamps.current);
 
-    let result = await fetcher(slug, token, params);
-    if (postProcessor) {
-      return postProcessor(result);
+    try {
+      let result = await fetcher(slug, token, params);
+      if (postProcessor) {
+        return postProcessor(result);
+      }
+      return result;
+    } catch (e) {
+      if (e instanceof Errors.NotAuthorized) {
+        onError(401);
+      } else {
+        throw e;
+      }
     }
-    return result;
   };
 }
 
@@ -61,6 +70,10 @@ let fetcher = async (slug: string, token: string, params?: unknown) => {
       throw new Errors.NotFound(
         `The Decode slug you tried to use, ${slug}, is not registered.`
       );
+    }
+
+    if (res.status === 401) {
+      throw new Errors.NotAuthorized(`Received a 401 from Decode.`);
     }
 
     throw new Errors.UnexpectedError(

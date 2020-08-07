@@ -8,10 +8,10 @@ const localStorageKey = "decode:v0.1";
 const oneMinute = 60_000;
 
 let getLocalStorage = () => localStorage.getItem(localStorageKey);
-let setLocalStorage = (token: string) =>
+let setLocalStorage = (token: string, expiresAt: number) =>
   localStorage.setItem(
     localStorageKey,
-    JSON.stringify({ token, exp: Date.now() + oneMinute * 120 })
+    JSON.stringify({ token, exp: expiresAt })
   );
 let fetchTokenIfNotExpiringSoon = () => {
   let stored = getLocalStorage();
@@ -27,23 +27,22 @@ let fetchTokenIfNotExpiringSoon = () => {
 
 interface Context {
   token: string;
+  onError(code: 401): void;
 }
 
 export const DecodeContext = React.createContext<Context>({
   token: "",
+  onError: () => {},
 });
 
 interface Props {
   swrConfig?: ConfigInterface;
-  cacheDecodeToken?: boolean;
+  cacheToken?: boolean;
 }
 
-let DecodeProvider: React.FC<Props> = ({
-  swrConfig,
-  cacheDecodeToken: cacheToken,
-  children,
-}) => {
+let DecodeProvider: React.FC<Props> = ({ swrConfig, cacheToken, children }) => {
   let [token, setToken] = useState("");
+  let [shouldRedirect, setShouldRedirect] = useState(false);
 
   if (cacheToken == undefined) {
     if (process.env.NODE_ENV === "production") {
@@ -53,15 +52,27 @@ let DecodeProvider: React.FC<Props> = ({
     }
   }
 
+  let onError = (error: 401) => {
+    switch (error) {
+      case 401: {
+        setShouldRedirect(true);
+        return;
+      }
+      default: {
+        throw new Error(`No error handler registered for error code: ${error}`);
+      }
+    }
+  };
+
   useEffect(() => {
     let doEffect = async () => {
       let storedToken = cacheToken && fetchTokenIfNotExpiringSoon();
       let { [code_param_name]: code, ...rest } = getParams();
 
       if (code) {
-        let token = await exchangeCode(code as string);
+        let { token, expiresAt } = await exchangeCode(code as string);
         setToken(token);
-        cacheToken && setLocalStorage(token);
+        cacheToken && setLocalStorage(token, expiresAt);
         let { origin, pathname } = window.location;
         let search = encodeParams(rest);
         let url = search ? origin + pathname + "?" + search : origin + pathname;
@@ -69,24 +80,32 @@ let DecodeProvider: React.FC<Props> = ({
       } else if (storedToken) {
         setToken(storedToken);
       } else {
-        window.location.href = `https://api.usedecode.com/auth/start?redirect_url=${window.location.href}`;
+        setShouldRedirect(true);
       }
     };
     doEffect();
   }, []);
+
+  useEffect(() => {
+    if (shouldRedirect) {
+      window.location.href = `https://api.usedecode.com/auth/start?redirect_url=${window.location.href}`;
+    }
+  }, [shouldRedirect]);
 
   if (!token) {
     return <Loading msg="Logging you in..." />;
   }
 
   return (
-    <DecodeContext.Provider value={{ token }}>
+    <DecodeContext.Provider value={{ token, onError }}>
       <SWRConfig value={swrConfig ?? {}}>{children}</SWRConfig>
     </DecodeContext.Provider>
   );
 };
 
-let exchangeCode = async (code: string): Promise<string> => {
+let exchangeCode = async (
+  code: string
+): Promise<{ token: string; expiresAt: number }> => {
   let res = await fetch("https://api.usedecode.com/auth/exchange_code", {
     method: "POST",
     body: JSON.stringify({ code }),
@@ -99,8 +118,8 @@ let exchangeCode = async (code: string): Promise<string> => {
       `Received an unexpected error exchange decode code for token (${res.status}): ${res.body}`
     );
   }
-  let { token } = await res.json();
-  return token;
+  let { token, exp: expiresAt } = await res.json();
+  return { token, expiresAt };
 };
 
 type Params = { [k: string]: string | number | boolean };
@@ -127,5 +146,6 @@ const encodeParams = (p: Params) =>
     .join("&");
 
 export let useToken = () => useContext(DecodeContext).token;
+export let useOnError = () => useContext(DecodeContext).onError;
 
 export default DecodeProvider;

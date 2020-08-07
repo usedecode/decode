@@ -31,6 +31,13 @@ class NotFound extends DecodeError {
   }
 }
 
-const errors = { InvalidParams, UnexpectedError, NotFound };
+class NotAuthorized extends DecodeError {
+  constructor(message: any) {
+    super(message);
+    this.name = "NotAuthorized";
+  }
+}
+
+const errors = { InvalidParams, UnexpectedError, NotFound, NotAuthorized };
 
 export default errors;
