@@ -118,7 +118,7 @@ let exchangeCode = async (
       `Received an unexpected error exchange decode code for token (${res.status}): ${res.body}`
     );
   }
-  let { token, exp: expiresAt } = await res.json();
+  let { token, expires_at: expiresAt } = await res.json();
   return { token, expiresAt };
 };
 
