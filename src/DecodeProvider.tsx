@@ -71,12 +71,12 @@ let DecodeProvider: React.FC<Props> = ({ swrConfig, cacheToken, children }) => {
 
       if (code) {
         let { token, expiresAt } = await exchangeCode(code as string);
-        setToken(token);
         cacheToken && setLocalStorage(token, expiresAt);
         let { origin, pathname } = window.location;
         let search = encodeParams(rest);
         let url = search ? origin + pathname + "?" + search : origin + pathname;
         window.history.pushState({}, "", url);
+        setToken(token); // hack -- set state after window.pushState() to force re-render
       } else if (storedToken) {
         setToken(storedToken);
       } else {
@@ -119,7 +119,7 @@ let exchangeCode = async (
     );
   }
   let { token, expires_at: expiresAt } = await res.json();
-  return { token, expiresAt };
+  return { token, expiresAt: expiresAt * 1000 };
 };
 
 type Params = { [k: string]: string | number | boolean };
