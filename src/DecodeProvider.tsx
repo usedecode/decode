@@ -29,7 +29,7 @@ let fetchTokenIfNotExpiringSoon = () => {
 interface Context {
   token: string;
   onError(code: 401): void;
-  logout(redirectUrl: string): void;
+  logout(redirectUrl?: string): void;
 }
 
 export const DecodeContext = React.createContext<Context>({
@@ -104,9 +104,13 @@ let DecodeProvider: React.FC<Props> = ({
     }
   }, [shouldRedirect]);
 
-  let logout = (redirectUrl: string) => {
+  let logout = (redirectUrl?: string) => {
     delLocalStorage();
-    window.location.href = `https://api.usedecode.com/auth/logout?redirect_url=${redirectUrl}`;
+    if (redirectUrl) {
+      window.location.href = `https://api.usedecode.com/auth/logout?redirect_url=${redirectUrl}`;
+    } else {
+      window.location.href = `https://api.usedecode.com/auth/logout`;
+    }
   };
 
   if (!token) {
@@ -164,7 +168,7 @@ const encodeParams = (p: Params) =>
 
 export let useToken = () => useContext(DecodeContext).token;
 export let useOnError = () => useContext(DecodeContext).onError;
-export let logout = (redirectUrl: string) =>
+export let logout = (redirectUrl?: string) =>
   useContext(DecodeContext).logout(redirectUrl);
 
 export default DecodeProvider;
