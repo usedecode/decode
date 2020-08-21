@@ -168,7 +168,6 @@ const encodeParams = (p: Params) =>
 
 export let useToken = () => useContext(DecodeContext).token;
 export let useOnError = () => useContext(DecodeContext).onError;
-export let logout = (redirectUrl?: string) =>
-  useContext(DecodeContext).logout(redirectUrl);
+export let useLogout = () => useContext(DecodeContext).logout;
 
 export default DecodeProvider;
