@@ -38,9 +38,15 @@ export const DecodeContext = React.createContext<Context>({
 interface Props {
   swrConfig?: ConfigInterface;
   cacheToken?: boolean;
+  org?: string;
 }
 
-let DecodeProvider: React.FC<Props> = ({ swrConfig, cacheToken, children }) => {
+let DecodeProvider: React.FC<Props> = ({
+  swrConfig,
+  cacheToken,
+  org,
+  children,
+}) => {
   let [token, setToken] = useState("");
   let [shouldRedirect, setShouldRedirect] = useState(false);
 
@@ -88,7 +94,10 @@ let DecodeProvider: React.FC<Props> = ({ swrConfig, cacheToken, children }) => {
 
   useEffect(() => {
     if (shouldRedirect) {
-      window.location.href = `https://api.usedecode.com/auth/start?redirect_url=${window.location.href}`;
+      let orgAppendix = org ? `&org=${org}` : "";
+      window.location.href =
+        `https://api.usedecode.com/auth/start?redirect_url=${window.location.href}` +
+        orgAppendix;
     }
   }, [shouldRedirect]);
 
