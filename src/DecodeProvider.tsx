@@ -13,6 +13,7 @@ let setLocalStorage = (token: string, expiresAt: number) =>
     localStorageKey,
     JSON.stringify({ token, exp: expiresAt })
   );
+let delLocalStorage = () => localStorage.removeItem(localStorageKey);
 let fetchTokenIfNotExpiringSoon = () => {
   let stored = getLocalStorage();
   if (stored) {
@@ -28,11 +29,13 @@ let fetchTokenIfNotExpiringSoon = () => {
 interface Context {
   token: string;
   onError(code: 401): void;
+  logout(redirectUrl: string): void;
 }
 
 export const DecodeContext = React.createContext<Context>({
   token: "",
   onError: () => {},
+  logout: () => {},
 });
 
 interface Props {
@@ -101,12 +104,17 @@ let DecodeProvider: React.FC<Props> = ({
     }
   }, [shouldRedirect]);
 
+  let logout = (redirectUrl: string) => {
+    delLocalStorage();
+    window.location.href = `https://api.usedecode.com/auth/logout?redirect_url=${redirectUrl}`;
+  };
+
   if (!token) {
     return <Loading msg="Logging you in..." />;
   }
 
   return (
-    <DecodeContext.Provider value={{ token, onError }}>
+    <DecodeContext.Provider value={{ token, onError, logout }}>
       <SWRConfig value={swrConfig ?? {}}>{children}</SWRConfig>
     </DecodeContext.Provider>
   );
@@ -156,5 +164,7 @@ const encodeParams = (p: Params) =>
 
 export let useToken = () => useContext(DecodeContext).token;
 export let useOnError = () => useContext(DecodeContext).onError;
+export let logout = (redirectUrl: string) =>
+  useContext(DecodeContext).logout(redirectUrl);
 
 export default DecodeProvider;
