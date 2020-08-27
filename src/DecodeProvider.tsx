@@ -99,15 +99,18 @@ let DecodeProvider: React.FC<Props> = ({
     if (shouldRedirect) {
       let orgAppendix = org ? `&org=${org}` : "";
       window.location.href =
-        `https://api.usedecode.com/auth/start?redirect_url=${window.location.href}` +
-        orgAppendix;
+        `https://api.usedecode.com/auth/start?redirect_url=${window.encodeURIComponent(
+          window.location.href
+        )}` + orgAppendix;
     }
   }, [shouldRedirect]);
 
   let logout = (redirectUrl?: string) => {
     delLocalStorage();
     if (redirectUrl) {
-      window.location.href = `https://api.usedecode.com/auth/logout?redirect_url=${redirectUrl}`;
+      window.location.href = `https://api.usedecode.com/auth/logout?redirect_url=${window.encodeURIComponent(
+        redirectUrl
+      )}`;
     } else {
       window.location.href = `https://api.usedecode.com/auth/logout`;
     }
