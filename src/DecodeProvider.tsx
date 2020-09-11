@@ -28,6 +28,7 @@ let fetchTokenIfNotExpiringSoon = () => {
 
 interface Context {
   token: string;
+  env?: string;
   onError(code: 401): void;
   logout(redirectUrl?: string): void;
 }
@@ -42,12 +43,14 @@ interface Props {
   swrConfig?: ConfigInterface;
   cacheToken?: boolean;
   org?: string;
+  env?: string;
 }
 
 let DecodeProvider: React.FC<Props> = ({
   swrConfig,
   cacheToken,
   org,
+  env,
   children,
 }) => {
   let [token, setToken] = useState("");
@@ -121,7 +124,7 @@ let DecodeProvider: React.FC<Props> = ({
   }
 
   return (
-    <DecodeContext.Provider value={{ token, onError, logout }}>
+    <DecodeContext.Provider value={{ logout, token, env, onError }}>
       <SWRConfig value={swrConfig ?? {}}>{children}</SWRConfig>
     </DecodeContext.Provider>
   );
@@ -170,6 +173,7 @@ const encodeParams = (p: Params) =>
     .join("&");
 
 export let useToken = () => useContext(DecodeContext).token;
+export let useEnv = () => useContext(DecodeContext).env;
 export let useOnError = () => useContext(DecodeContext).onError;
 export let useLogout = () => useContext(DecodeContext).logout;
 

@@ -1,5 +1,5 @@
 import Errors from "./errors";
-import { useToken, useOnError } from "DecodeProvider";
+import { useToken, useOnError, useEnv } from "DecodeProvider";
 import { TransformFn } from "./useDecode";
 import { useRef } from "react";
 
@@ -14,6 +14,7 @@ export function useFetcher<Data, TransformedData = any>(
   postProcessor?: TransformFn<Data, TransformedData>
 ) {
   let token = useToken();
+  let env = useEnv();
   let onError = useOnError();
   // used to prevent runaway fetching in development
   let recentFetchesTimestamps = useRef<number[]>([]);
@@ -26,7 +27,7 @@ export function useFetcher<Data, TransformedData = any>(
     checkThrottle(recentFetchesTimestamps.current);
 
     try {
-      let result = await fetcher(slug, token, params);
+      let result = await fetcher(slug, token, env, params);
       if (postProcessor) {
         return postProcessor(result);
       }
@@ -49,14 +50,26 @@ let checkThrottle = (ts: number[]) => {
   }
 };
 
-let fetcher = async (slug: string, token: string, params?: unknown) => {
+let fetcher = async (
+  slug: string,
+  token: string,
+  env?: string,
+  params?: unknown
+) => {
   let body = typeof params === "string" ? params : JSON.stringify(params ?? {});
+
+  let headers = new Headers({
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  });
+
+  if (env) {
+    headers.set("decode-env", env);
+  }
+
   let res = await fetch(`https://api.usedecode.com/e/${slug}`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+    headers,
     body,
   });
   let json = null;
