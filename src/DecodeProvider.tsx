@@ -27,6 +27,7 @@ let fetchTokenIfNotExpiringSoon = () => {
 };
 
 interface Context {
+  initialized?: boolean;
   token: string;
   env?: string;
   onError(code: 401): void;
@@ -124,7 +125,9 @@ let DecodeProvider: React.FC<Props> = ({
   }
 
   return (
-    <DecodeContext.Provider value={{ logout, token, env, onError }}>
+    <DecodeContext.Provider
+      value={{ initialized: true, logout, token, env, onError }}
+    >
       <SWRConfig value={swrConfig ?? {}}>{children}</SWRConfig>
     </DecodeContext.Provider>
   );
@@ -172,9 +175,21 @@ const encodeParams = (p: Params) =>
     .map((kv) => kv.map(encodeURIComponent).join("="))
     .join("&");
 
-export let useToken = () => useContext(DecodeContext).token;
-export let useEnv = () => useContext(DecodeContext).env;
-export let useOnError = () => useContext(DecodeContext).onError;
-export let useLogout = () => useContext(DecodeContext).logout;
+let useDecodeContext = (): Context => {
+  let ctx = useContext(DecodeContext);
+
+  if (!ctx.initialized) {
+    throw new Error(
+      "You tried to use a Decode hook (eg `useDecode`) without having a parent <DecodeProvider /> component in the tree. Please wrap your app in <DecodeProvider /> near the top of the component tree, like this: <DecodeProvider><App /></DecodeProvider>."
+    );
+  }
+
+  return ctx;
+};
+
+export let useToken = () => useDecodeContext().token;
+export let useEnv = () => useDecodeContext().env;
+export let useOnError = () => useDecodeContext().onError;
+export let useLogout = () => useDecodeContext().logout;
 
 export default DecodeProvider;
