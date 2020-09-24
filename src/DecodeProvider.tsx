@@ -7,13 +7,13 @@ const localStorageKey = "decode:v0.1";
 // const oneDay = 86400000;
 const oneMinute = 60_000;
 
-let getLocalStorage = () => localStorage.getItem(localStorageKey);
+let getLocalStorage = () => localStorage?.getItem(localStorageKey);
 let setLocalStorage = (token: string, expiresAt: number) =>
-  localStorage.setItem(
+  localStorage?.setItem(
     localStorageKey,
     JSON.stringify({ token, exp: expiresAt })
   );
-let delLocalStorage = () => localStorage.removeItem(localStorageKey);
+let delLocalStorage = () => localStorage?.removeItem(localStorageKey);
 let fetchTokenIfNotExpiringSoon = () => {
   let stored = getLocalStorage();
   if (stored) {
