@@ -1,6 +1,6 @@
 export interface ErrorContext {
   response: Response;
-  json?: object;
+  json?: any;
 }
 
 export class DecodeError extends Error {

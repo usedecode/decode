@@ -12,6 +12,7 @@
   "scripts": {
     "build-ts": "tsc --emitDeclarationOnly true --declaration true --outDir dist",
     "build": "rm -rf dist && rollup -c && yarn build-ts",
+    "build-dev": "rollup -c && yarn build-ts",
     "prepare": "npm run build"
   },
   "source": [
