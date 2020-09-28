@@ -12,5 +12,6 @@ export { default as useDecode } from "./useDecode";
 export * from "./useDecode";
 export { mutate } from "swr";
 
+export { default as useRequest } from "./useRequest";
 export { default as Table } from "./components/Table";
 export { ConnectedTable } from "./components/Table";

@@ -47,6 +47,7 @@
   "dependencies": {
     "date-fns": "^2.16.1",
     "jshashes": "h2non/jshashes",
+    "rc-notification": "^4.4.0",
     "rc-tooltip": "^4.2.3",
     "react-table": "^7.5.1",
     "swr": "^0.2.2"
