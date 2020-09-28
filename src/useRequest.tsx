@@ -7,9 +7,29 @@ import {
 } from "./components/antd/icons";
 import { notification } from "./components/Notification";
 
-export default function useRequest() {
+interface Options {
+  showNotifications: boolean;
+}
+
+interface NotificationArgs {
+  message: React.ReactNode;
+  icon?: React.ReactNode;
+  duration?: number | null;
+}
+
+export default function useRequest(options?: Options) {
   let [processing, setProcessing] = useState(false);
   let fetcher = useFetcher();
+
+  let destroyNotification = () => {
+    if (options && !options.showNotifications) return;
+    notification.destroy();
+  };
+
+  let showNotification = async (args: NotificationArgs) => {
+    if (options && !options.showNotifications) return;
+    await notification.open(args);
+  };
 
   let fn = async (arg: FetchKey) => {
     setProcessing(true);
@@ -25,7 +45,7 @@ export default function useRequest() {
 
     // Don't open "processing" notification immediately
     let notificationTimeout = setTimeout(async () => {
-      await notification.open({
+      await showNotification({
         message: (
           <span>
             Processing request{" "}
@@ -41,8 +61,8 @@ export default function useRequest() {
       let res = await fetcher(slug, params);
       clearTimeout(notificationTimeout);
       setProcessing(false);
-      notification.destroy();
-      await notification.open({
+      destroyNotification();
+      await showNotification({
         message: (
           <span>
             Request <span style={{ fontFamily: "monospace" }}>{slug}</span> ran
@@ -56,14 +76,14 @@ export default function useRequest() {
     } catch (e) {
       clearTimeout(notificationTimeout);
       setProcessing(false);
-      notification.destroy();
+      destroyNotification();
       console.error(`Error when making request to Decode: ${e}`);
       let summary;
       try {
         summary = e.context.json.error.summary;
       } catch (e) {}
 
-      await notification.open({
+      await showNotification({
         message: (
           <div>
             <p>
