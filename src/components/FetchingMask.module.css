@@ -1,0 +1,37 @@
+.fetchingmask {
+  position: absolute;
+  top: 0;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -ms-flex-align: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  z-index: 100;
+  background-color: hsla(0, 0%, 100%, 0.4);
+  pointer-events: none;
+  transition-property: opacity;
+  transition-duration: 0.7s;
+  transition-timing-function: ease-in-out;
+  opacity: 0;
+}
+
+.fetchingmask .spinner {
+  font-size: 20px;
+  color: #0e77ca;
+  animation: loadingCircle 1s linear infinite;
+}
+
+.fetchingmask.fetching {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+@keyframes loadingCircle {
+  to {
+    -webkit-transform: rotate(1turn);
+    transform: rotate(1turn);
+  }
+}

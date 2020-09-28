@@ -11,3 +11,6 @@ export { default as LoadingCard } from "./LoadingCard"; //legacy
 export { default as useDecode } from "./useDecode";
 export * from "./useDecode";
 export { mutate } from "swr";
+
+export { default as Table } from "./components/Table";
+export { ConnectedTable } from "./components/Table";
