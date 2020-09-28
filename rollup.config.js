@@ -1,6 +1,8 @@
 import commonjs from "@rollup/plugin-commonjs";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
+import autoprefixer from "autoprefixer";
+import postcss from "rollup-plugin-postcss";
 
 const config = () => ({
   input: "src/index.ts",
@@ -19,6 +21,12 @@ const config = () => ({
     },
     nodeResolve(),
     commonjs(),
+    postcss({
+      plugins: [autoprefixer()],
+      sourceMap: true,
+      extract: false,
+      minimize: true,
+    }),
   ],
   output: {
     file: `dist/decode.js`,
