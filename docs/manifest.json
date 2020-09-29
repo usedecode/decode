@@ -1,0 +1,14 @@
+{
+  "routes": [
+    {
+      "title": "Documentation",
+      "heading": true,
+      "routes": [
+        {
+          "title": "Everything",
+          "path": "/docs/doc.md"
+        }
+      ]
+    }
+  ]
+}
