@@ -5,8 +5,12 @@
       "heading": true,
       "routes": [
         {
-          "title": "Everything",
-          "path": "/docs/doc.md"
+          "title": "Getting Started",
+          "path": "/docs/start.md"
+        },
+        {
+          "title": "Reference",
+          "path": "/docs/reference.md"
         }
       ]
     }
