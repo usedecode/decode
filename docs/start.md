@@ -1,4 +1,4 @@
-# Walkthrough
+# Getting Started
 
 ## What is Decode?
 
@@ -29,7 +29,7 @@ You'll find a fresh, incomplete version of Spacebank over on this Codesandbox:
 
 The basic styles are in place, and some components are laid out. But this app isn't connected to any back-end data sources. Let's change that.
 
-### Resources
+## Resources
 
 When you first sign-up for Decode, we pre-populate your account with two _resources_.
 
@@ -77,7 +77,7 @@ In just a moment, we'll see how we use the Decode client library to securely rou
 
 But first, you need to define your first query.
 
-### Your first query
+## Your first query
 
 Your first task is to add a table to Spacebank that displays the transactions from the `transactions` table in the Spacebank database.
 
@@ -125,7 +125,7 @@ $ curl -X POST https://api.usedecode.com/e/listTransactions
 
 Adding authentication to an app and fussing with API tokens is always a pain. Luckily, Decode makes this as simple as possible.
 
-### Easy authentication with `<DecodeProvider />`
+## Easy authentication with `<DecodeProvider />`
 
 It's time to start editing the Spacebank React app. Again, the Codesandbox for that is here:
 
@@ -235,7 +235,7 @@ Underneath the hood, `<ConnectedTable />` wraps the most popular React table lib
 
 We're still building out the docs for `<ConnectedTable />`. But the docs for React Table largely apply.
 
-### Adding variables to queries
+## Adding variables to queries
 
 Right now, your `listTransactions` query grabs all the transactions from the database. You can make it more powerful by weaving in _variables_.
 
@@ -358,7 +358,7 @@ Underneath the hood, Decode hooks and components use Vercel's [SWR](https://gith
 
 If you're familiar with SWR, there are a couple key differences though. One that you may have noticed above: You don't have to worry about memoizing the object in the `fetchKey` array. The Decode client takes care of that for you.
 
-### Adding HTTP queries
+## Adding HTTP queries
 
 As you saw earlier, your account comes pre-populated with one HTTP resource, the Spacebank API. This API is protected by an auth token, which we kindly supplied for you.
 
