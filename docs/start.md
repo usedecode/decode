@@ -1,5 +1,7 @@
 # Getting Started
 
+# Checking
+
 ## What is Decode?
 
 Decode is a full-stack toolkit for developing internal tools in React. Internal tools are the stuff that employees at companies use, like customer support dashboards or ops tools.
