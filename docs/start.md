@@ -10,7 +10,9 @@ You can logon to Decode and connect your HTTP APIs and databases. Then, you can 
 
 In this tutorial, we're going to build a tool for a bank, Spacebank. This tool is used by the bank's risk team to mark transactions as _fishy_ 🐟. Admins work through a table of transactions that they can sort and filter. They can mark a transaction as fishy/not fishy:
 
-![./assets/walkthrough/goHfJheGxN.gif](./assets/walkthrough/goHfJheGxN.gif)
+<img src="assets/walkthrough/goHfJheGxN.resized.gif" width="600px" height="auto">
+
+<!-- ![./assets/walkthrough/goHfJheGxN.gif](./assets/walkthrough/goHfJheGxN.gif) -->
 
 We'll make use of the following Decode features to bring this app to life:
 
@@ -50,7 +52,9 @@ You don't need to make any changes to the resources. But let's see how they're e
 
 Click on the "Spacebank API" resource and you'll see how APIs are specified in Decode:
 
-![./assets/walkthrough/Decode_-_API_automation_2020-09-19_18-07-11.png](./assets/walkthrough/Decode_-_API_automation_2020-09-19_18-07-11.png)
+<img src="assets/walkthrough/Decode_-_API_automation_2020-09-19_18-07-11.resized.png" width="500px" height="auto">
+
+<!-- ![./assets/walkthrough/Decode_-_API_automation_2020-09-19_18-07-11.png](./assets/walkthrough/Decode_-_API_automation_2020-09-19_18-07-11.png) -->
 
 The Spacebank API resource.
 
@@ -67,13 +71,18 @@ Decode will use the same security scheme to call the API resource for every user
 
 Next, click on the "Spacebank db" resource. For databases, note you just specify the connection details:
 
-![./assets/walkthrough/Untitled.png](./assets/walkthrough/Untitled.png)
+<img src="assets/walkthrough/Untitled.resized.png" width="500px" height="auto">
+
+<!-- ![./assets/walkthrough/Untitled.png](./assets/walkthrough/Untitled.png) -->
 
 The Spacebank database resource.
 
 In just a moment, we'll see how we use the Decode client library to securely route requests through Decode and to our two resources:
 
-![./assets/walkthrough/Untitled%201.png](./assets/walkthrough/Untitled%201.png)
+<!-- set the width and height to auto as the picture looks describing while covering whole width -->
+<img src="assets/walkthrough/Untitled%201.resized.png" width="auto" height="auto">
+
+<!-- ![./assets/walkthrough/Untitled%201.png](./assets/walkthrough/Untitled%201.png) -->
 
 But first, you need to define your first query.
 
@@ -85,7 +94,9 @@ In order to do that, you need to compose a _query_. A query is how we fetch data
 
 Head over to [Queries](https://dashboard.usedecode.com/queries) and select "+ Add your first query." Select the Spacebank database. You'll be prompted with the query editor for SQL:
 
-![./assets/walkthrough/Untitled%202.png](./assets/walkthrough/Untitled%202.png)
+<img src="assets/walkthrough/Untitled%202.resized.png" width="600px" height="auto">
+
+<!-- ![./assets/walkthrough/Untitled%202.png](./assets/walkthrough/Untitled%202.png) -->
 
 The query editor, where we'll add our first query.
 
@@ -99,13 +110,17 @@ SELECT * FROM transactions order by inserted_at desc limit 10000;
 
 Now, click the **Test** button. You'll see a panel with the label "✅ Result" appear:
 
-![./assets/walkthrough/Untitled%203.png](./assets/walkthrough/Untitled%203.png)
+<img src="assets/walkthrough/Untitled%203.resized.png" width="500px" height="auto">
+
+<!-- ![./assets/walkthrough/Untitled%203.png](./assets/walkthrough/Untitled%203.png) -->
 
 After clicking test, the Result panel will appear.
 
 Click on the panel to slide it open. You'll see a formatted JSON response. This is a preview of the JSON that this query will return to our React front-end:
 
-![./assets/walkthrough/Untitled%204.png](./assets/walkthrough/Untitled%204.png)
+<img src="assets/walkthrough/Untitled%204.resized.png" width="500px" height="auto">
+
+<!-- ![./assets/walkthrough/Untitled%204.png](./assets/walkthrough/Untitled%204.png) -->
 
 The JSON returned by this query. Note that we store tags - like whether or not the transaction is fishy - in another table.
 
@@ -158,11 +173,15 @@ When you save, it will look like nothing has happened. But that's because _you'r
 
 To prove it, copy the Codesandbox URL, which you can find here:
 
-![./assets/walkthrough/Untitled%205.png](./assets/walkthrough/Untitled%205.png)
+<img src="assets/walkthrough/Untitled%205.resized.png" width="500px" height="auto">
+
+<!-- ![./assets/walkthrough/Untitled%205.png](./assets/walkthrough/Untitled%205.png) -->
 
 Then, open an "incognito" or "private" browser window (`CMD + SHIFT + N` on the Mac in most browsers). Paste in the URL - and now you're redirected to the Decode login page:
 
-![./assets/walkthrough/Untitled%206.png](./assets/walkthrough/Untitled%206.png)
+<img src="assets/walkthrough/Untitled%206.resized.png" width="500px" height="auto">
+
+<!-- ![./assets/walkthrough/Untitled%206.png](./assets/walkthrough/Untitled%206.png) -->
 
 If you login, you'll be seamlessly redirected back to the Spacebank app.
 
@@ -192,7 +211,9 @@ With this:
 
 Save, and your table - complete with data from your database - will greet you:
 
-![./assets/walkthrough/Untitled%207.png](./assets/walkthrough/Untitled%207.png)
+<img src="assets/walkthrough/Untitled%207.resized.png" width="600px" height="auto">
+
+<!-- ![./assets/walkthrough/Untitled%207.png](./assets/walkthrough/Untitled%207.png) -->
 
 `<ConnectedTable />`, which automagically pulls data from Decode.
 
@@ -220,7 +241,9 @@ Last, while you're here, set the `onSelectRow` property of the `<ConnectedTable 
 
 With `memoizedColumns` in place, your table should be looking great!
 
-![./assets/walkthrough/Untitled%208.png](./assets/walkthrough/Untitled%208.png)
+<img src="assets/walkthrough/Untitled%208.resized.png" width="600px" height="auto">
+
+<!-- ![./assets/walkthrough/Untitled%208.png](./assets/walkthrough/Untitled%208.png) -->
 
 `<ConnectedTable />`, with prettier, formatted columns.
 
@@ -250,7 +273,9 @@ ORDER BY inserted_at DESC LIMIT 10000;
 
 When it's typed out, you'll notice that Decode highlights the variables in the query:
 
-![./assets/walkthrough/Untitled%209.png](./assets/walkthrough/Untitled%209.png)
+<img src="assets/walkthrough/Untitled%209.resized.png" width="500px" height="auto">
+
+<!-- ![./assets/walkthrough/Untitled%209.png](./assets/walkthrough/Untitled%209.png) -->
 
 This query now accepts two variables which act like filters on the data:
 
@@ -264,7 +289,9 @@ Click "Test." You'll be prompted to enter values for each variable that Decode c
 - `%erewhon%`
 - `1970-01-01T00:00:00.001Z`
 
-![./assets/walkthrough/Untitled%2010.png](./assets/walkthrough/Untitled%2010.png)
+<img src="assets/walkthrough/Untitled%2010.resized.png" width="500px" height="auto">
+
+<!-- ![./assets/walkthrough/Untitled%2010.png](./assets/walkthrough/Untitled%2010.png) -->
 
 Variable values that will be used to test the query.
 
@@ -278,7 +305,9 @@ Until we improve defining test variables, you always have the option to skip dat
 
 Now, if you flip back over to Spacebank, you'll find that there's an error!
 
-![./assets/walkthrough/Untitled%2011.png](./assets/walkthrough/Untitled%2011.png)
+<img src="assets/walkthrough/Untitled%2011.resized.png" width="700px" height="auto">
+
+<!-- ![./assets/walkthrough/Untitled%2011.png](./assets/walkthrough/Untitled%2011.png) -->
 
 Behind the scenes, all Decode components and hooks poll on occasion for new data to make sure the React app has the latest stuff. Because you re-focused on the Spacebank window, `<ConnectedTable />` attempted to re-fetch the query. Except now, the query requires your two new variables.
 
@@ -338,7 +367,9 @@ Note that above, `debouncedSearch` is wrapped in `%%` - this will give you a fuz
 
 Go ahead and save and try it out! Typing in `gjusta` filters the results:
 
-![./assets/walkthrough/Untitled%2012.png](./assets/walkthrough/Untitled%2012.png)
+<img src="assets/walkthrough/Untitled%2012.resized.png" width="500px" height="auto">
+
+<!-- ![./assets/walkthrough/Untitled%2012.png](./assets/walkthrough/Untitled%2012.png) -->
 
 Someone has a serious Postmates problem.
 
@@ -368,7 +399,9 @@ Head back over to [queries](https://dashboard.usedecode.com/queries) and click "
 
 This first request will get a GET request to grab the list of IDs for transactions marked fishy:
 
-![./assets/walkthrough/Untitled%2013.png](./assets/walkthrough/Untitled%2013.png)
+<img src="assets/walkthrough/Untitled%2013.resized.png" width="500px" height="auto">
+
+<!-- ![./assets/walkthrough/Untitled%2013.png](./assets/walkthrough/Untitled%2013.png) -->
 
 Like before, `listTaggedTransactionIds` is the endpoint you're creating on Decode - the _slug_ of the query.
 
@@ -378,13 +411,17 @@ That endpoint requires one query param, `name` . This will be the name of the ta
 
 Once you've filled in the details, click "Test." This will open the HTTP testing window. Fill in the value "fishy" for the `name` param and click "Run test":
 
-![./assets/walkthrough/Untitled%2014.png](./assets/walkthrough/Untitled%2014.png)
+<img src="assets/walkthrough/Untitled%2014.resized.png" width="500px" height="auto">
+
+<!-- ![./assets/walkthrough/Untitled%2014.png](./assets/walkthrough/Untitled%2014.png) -->
 
 The result shows the result returned straight from `https://spacebank.onrender.com/api/tagged_transaction_ids`. As you can see, `ids` is an empty array. Because no one has tagged any transactions as "fishy" yet. (You need to get this app over to Spacebank Risk, stat!)
 
 Click "Save." Now, add the query for creating a tag by following the same flow of "Add Query → Spacebank - API":
 
-![./assets/walkthrough/Untitled%2015.png](./assets/walkthrough/Untitled%2015.png)
+<img src="assets/walkthrough/Untitled%2015.resized.png" width="500px" height="auto">
+
+<!-- ![./assets/walkthrough/Untitled%2015.png](./assets/walkthrough/Untitled%2015.png) -->
 
 This time, it's a POST to `/transactions/{{transactionId}}/tag`. You're using a variable in the path, `transactionId`.
 
@@ -394,7 +431,9 @@ This one will be harder to test as you don't have an ID handy, so just click "Sa
 
 Now for the last query. "Add Query" again, this time it's a `DELETE` to the same path as above:
 
-![./assets/walkthrough/Untitled%2016.png](./assets/walkthrough/Untitled%2016.png)
+<img src="assets/walkthrough/Untitled%2016.resized.png" width="500px" height="auto">
+
+<!-- ![./assets/walkthrough/Untitled%2016.png](./assets/walkthrough/Untitled%2016.png) -->
 
 Ok, these queries are ready to go - Decode is fully setup now.
 
@@ -507,7 +546,9 @@ And just like that - you have yourself a real app!
 
 Go ahead and try it out. Now you can filter, sort, and mark suspicious transactions as fishy:
 
-![./assets/walkthrough/Kapture_2020-09-23_at_21.56.08.gif](./assets/walkthrough/Kapture_2020-09-23_at_21.56.08.gif)
+<img src="assets/walkthrough/Kapture_2020-09-23_at_21.56.08.resized.gif" width="600px" height="auto">
+
+<!-- ![./assets/walkthrough/Kapture_2020-09-23_at_21.56.08.gif](./assets/walkthrough/Kapture_2020-09-23_at_21.56.08.gif) -->
 
 As a recap, here's how you got here:
 

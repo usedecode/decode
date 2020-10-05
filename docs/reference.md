@@ -6,11 +6,15 @@ You can use variables in both database and HTTP queries.
 
 For example, here's a database query that contains an `id` variable in its statement:
 
-![Decode dashboard](./assets/reference/decode-variables-1.png)
+<img src="assets/reference/decode-variables-1.resized.png" width="500px" height="auto">
+
+<!-- ![Decode dashboard](./assets/reference/decode-variables-1.png) -->
 
 And here's an HTTP query that contains an `id` variable in its path:
 
-![Decode dashboard](./assets/reference/decode-variables-2.png)
+<img src="assets/reference/decode-variables-2.resized.png" width="500px" height="auto">
+
+<!-- ![Decode dashboard](./assets/reference/decode-variables-2.png) -->
 
 You specify variables by wrapping the variable in `{{}}`.
 
@@ -65,7 +69,9 @@ function ShowUser({ id }) {
 
 Let's say you have an HTTP request that looks like this:
 
-![Decode dashboard](./assets/reference/decode-http-1.png)
+<img src="assets/reference/decode-http-1.resized.png" width="500px" height="auto">
+
+<!-- ![Decode dashboard](./assets/reference/decode-http-1.png) -->
 
 Path and query param variables are passed in to `useDecode` as top-level properties in the params object, like this:
 
@@ -79,7 +85,9 @@ function ShowOrgUsers({ orgId }) {
 
 Often for write requests (i.e. POST/PUT/PATCH), you want to send along a body. Say you have an HTTP request that look like this:
 
-![Decode dashboard](./assets/reference/decode-http-2.png)
+<img src="assets/reference/decode-http-2.resized.png" width="500px" height="auto">
+
+<!-- ![Decode dashboard](./assets/reference/decode-http-2.png) -->
 
 Here's how you'd invoke the request:
 
