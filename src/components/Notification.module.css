@@ -42,18 +42,18 @@
   flex-direction: column-reverse;
 }
 
-.notification-topRight > span > div,
-.notification-bottomRight > span > div {
+.notification-topRight > div > div,
+.notification-bottomRight > div > div {
   animation: notification-right-in 200ms ease-in 1;
 }
 
-.notification-topLeft > span > div,
-.notification-bottomLeft > span > div {
+.notification-topLeft > div > div,
+.notification-bottomLeft > div > div {
   animation: notification-left-in 200ms ease-in 1;
 }
 
 /* Styles the notice */
-.root > span > div {
+.root > div > div {
   background: #fff;
   padding: 12px 16px;
   border-radius: 4px;
