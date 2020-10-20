@@ -1,4 +1,5 @@
 import { useOnError, useToken } from "AuthProvider";
+import { authProviderHelper } from "authProviderHelper";
 import withNotification from "withNotification";
 import Errors from "./errors";
 
@@ -11,10 +12,7 @@ interface Options {
   notifications?: boolean;
 }
 
-export default function wrapFetch(
-  fetch: fetchFunc,
-  opts: Options = {}
-): fetchFunc {
+export function wrapFetch(fetch: fetchFunc, opts: Options = {}): fetchFunc {
   if (opts.notifications) {
     fetch = wrapNotifications(fetch);
   }
@@ -45,7 +43,7 @@ async function getDecodeFetch(
   input: RequestInfo,
   init?: RequestInit | undefined
 ) {
-  let token = useToken();
+  let token = authProviderHelper.getToken();
 
   let decodeUrl = getDecodeUrl(input.toString());
   let decodeHeaders = new Headers(init && init.headers ? init.headers : {});
@@ -54,8 +52,6 @@ async function getDecodeFetch(
 
   let decodeOptions: RequestInit = {
     ...init,
-    mode: "cors",
-    credentials: "include",
     headers: decodeHeaders,
   };
 
@@ -63,7 +59,7 @@ async function getDecodeFetch(
 
   if (!res.ok) {
     if (res.status === 401) {
-      useOnError()(401);
+      authProviderHelper.goLogin();
       throw new Errors.NotAuthorized(`Received a 401 from Decode.`);
     }
 

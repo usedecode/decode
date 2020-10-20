@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import Loading from "Loading";
 import { ConfigInterface, SWRConfig } from "swr";
+import { authProviderHelper } from "authProviderHelper";
 
 const code_param_name = "__decode_code";
 const localStorageKey = "decodeauth:v0.1";
@@ -11,16 +12,16 @@ let getLocalStorage = () => localStorage?.getItem(localStorageKey);
 let setLocalStorage = (accessToken: string, expiresAt: number) =>
   localStorage?.setItem(
     localStorageKey,
-    JSON.stringify({ accessToken, exp: expiresAt })
+    JSON.stringify({ accessToken, expiresAt })
   );
 let delLocalStorage = () => localStorage?.removeItem(localStorageKey);
 let fetchTokenIfNotExpiringSoon = () => {
   let stored = getLocalStorage();
   if (stored) {
     try {
-      let { token, exp } = JSON.parse(stored);
-      if (exp - Date.now() > oneMinute * 60) {
-        return token;
+      let { accessToken, expiresAt } = JSON.parse(stored);
+      if (expiresAt - Date.now() > oneMinute * 60) {
+        return accessToken;
       }
     } catch (e) {}
   }
@@ -49,7 +50,7 @@ interface Props {
 
 let AuthProvider: React.FC<Props> = ({
   swrConfig,
-  cacheToken,
+  cacheToken = true,
   org,
   env,
   children,
@@ -57,9 +58,11 @@ let AuthProvider: React.FC<Props> = ({
   let [token, setToken] = useState("");
   let [shouldRedirect, setShouldRedirect] = useState(false);
 
-  if (cacheToken == undefined) {
-    cacheToken = true;
-  }
+  // update values in the singleton helper
+  useEffect(() => {
+    authProviderHelper.setOrg(org);
+    authProviderHelper.setToken(token);
+  }, [org, token]);
 
   let onError = (error: 401) => {
     switch (error) {
@@ -97,22 +100,18 @@ let AuthProvider: React.FC<Props> = ({
 
   useEffect(() => {
     if (shouldRedirect) {
-      let orgAppendix = org ? `&org=${org}` : "";
-      window.location.href =
-        `https://api.usedecode.com/auth/start?redirect_url=${window.encodeURIComponent(
-          window.location.href
-        )}` + orgAppendix;
+      authProviderHelper.goLogin();
     }
   }, [shouldRedirect]);
 
   let logout = (redirectUrl?: string) => {
     delLocalStorage();
     if (redirectUrl) {
-      window.location.href = `https://api.usedecode.com/auth/logout?redirect_url=${window.encodeURIComponent(
+      window.location.href = `https://api.decodeauth.com/auth/logout?redirect_url=${window.encodeURIComponent(
         redirectUrl
       )}`;
     } else {
-      window.location.href = `https://api.usedecode.com/auth/logout`;
+      window.location.href = `https://api.decodeauth.com/auth/logout`;
     }
   };
 
@@ -132,7 +131,7 @@ let AuthProvider: React.FC<Props> = ({
 let exchangeCode = async (
   code: string
 ): Promise<{ token: string; expiresAt: number }> => {
-  let res = await fetch("https://api.usedecode.com/auth/exchange_code", {
+  let res = await fetch("https://api.decodeauth.com/auth/exchange_code", {
     method: "POST",
     body: JSON.stringify({ code }),
     headers: {
@@ -176,7 +175,7 @@ let useAuthContext = (): Context => {
 
   if (!ctx.initialized) {
     throw new Error(
-      "You tried to use a Decode Auth hook (eg `useDecode`) without having a parent <AuthProvider /> component in the tree. Please wrap your app in <AuthProvider /> near the top of the component tree, like this: <AuthProvider><App /></AuthProvider>."
+      "You tried to use a Decode Auth resource (eg `wrapFetch`) without having a parent <AuthProvider /> component in the tree. Please wrap your app in <AuthProvider /> near the top of the component tree, like this: <AuthProvider><App /></AuthProvider>."
     );
   }
 
