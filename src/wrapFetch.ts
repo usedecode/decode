@@ -29,6 +29,7 @@ async function getNotificationsFetch(
   input: RequestInfo,
   init?: RequestInit | undefined
 ) {
+  // Show notifications only on fail if request is a GET
   let onlyFail = !init || !init.method || init.method.toLowerCase() === "get";
 
   return await withNotification(
