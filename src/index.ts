@@ -15,3 +15,10 @@ export { mutate } from "swr";
 export { default as useRequest } from "./useRequest";
 export { default as Table } from "./components/Table";
 export { ConnectedTable } from "./components/Table";
+
+export {
+  default as AuthProvider,
+  useToken as useAuthToken,
+  useLogout as useAuthLogout,
+} from "./AuthProvider";
+export { wrapFetch } from "./wrapFetch";
