@@ -58,6 +58,10 @@ let AuthProvider: React.FC<Props> = ({
   let [token, setToken] = useState("");
   let [shouldRedirect, setShouldRedirect] = useState(false);
 
+  useEffect(() => {
+    authProviderHelper.init();
+  }, []);
+
   // update values in the singleton helper
   useEffect(() => {
     authProviderHelper.setOrg(org);
