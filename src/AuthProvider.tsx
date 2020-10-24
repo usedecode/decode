@@ -34,6 +34,8 @@ let getTokenExpiry = () => {
       return expiresAt;
     } catch (e) {}
   }
+
+  return -1;
 };
 
 enum AuthState {
@@ -72,7 +74,9 @@ let AuthProvider: React.FC<Props> = ({
   children,
 }) => {
   let [authState, setAuthState] = useState(AuthState.Initializing);
+
   let [token, setToken] = useState<string | undefined>();
+  let [tokenExpiry, setTokenExpiry] = useState<number>(-1);
 
   useEffect(() => {
     authProviderHelper.init();
@@ -81,8 +85,8 @@ let AuthProvider: React.FC<Props> = ({
   useEffect(() => {
     let timeout: number;
 
-    if (token) {
-      let tokenDuration = getTokenExpiry() - Date.now();
+    if (tokenExpiry >= 0) {
+      let tokenDuration = tokenExpiry - Date.now();
       timeout = window.setTimeout(
         () => setAuthState(AuthState.LoggedOut),
         tokenDuration - 30
@@ -91,7 +95,7 @@ let AuthProvider: React.FC<Props> = ({
     return () => {
       timeout && clearTimeout(timeout);
     };
-  }, [token]);
+  }, [tokenExpiry]);
 
   let onError = (error: 401) => {
     switch (error) {
@@ -119,11 +123,13 @@ let AuthProvider: React.FC<Props> = ({
         window.history.pushState({}, "", url);
 
         setToken(token); // hack -- set state after window.pushState() to force re-render
+        setTokenExpiry(expiresAt);
         authProviderHelper.setToken(token);
 
         setAuthState(AuthState.LoggedIn);
       } else if (storedToken) {
         setToken(storedToken);
+        setTokenExpiry(getTokenExpiry());
         authProviderHelper.setToken(storedToken);
 
         setAuthState(AuthState.LoggedIn);
