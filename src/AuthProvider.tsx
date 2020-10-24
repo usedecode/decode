@@ -26,6 +26,15 @@ let fetchTokenIfNotExpiringSoon = () => {
     } catch (e) {}
   }
 };
+let getTokenExpiry = () => {
+  let stored = getLocalStorage();
+  if (stored) {
+    try {
+      let { expiresAt } = JSON.parse(stored);
+      return expiresAt;
+    } catch (e) {}
+  }
+};
 
 enum AuthState {
   Initializing = "Initializing",
@@ -69,11 +78,20 @@ let AuthProvider: React.FC<Props> = ({
     authProviderHelper.init();
   }, []);
 
-  // update values in the singleton helper
   useEffect(() => {
-    authProviderHelper.setOrg(org);
-    authProviderHelper.setToken(token);
-  }, [org, token]);
+    let timeout: number;
+
+    if (token) {
+      let tokenDuration = getTokenExpiry() - Date.now();
+      timeout = window.setTimeout(
+        () => setAuthState(AuthState.LoggedOut),
+        tokenDuration - 30
+      );
+    }
+    return () => {
+      timeout && clearTimeout(timeout);
+    };
+  }, [token]);
 
   let onError = (error: 401) => {
     switch (error) {
