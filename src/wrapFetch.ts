@@ -1,4 +1,3 @@
-import { useOnError, useToken } from "AuthProvider";
 import { authProviderHelper } from "authProviderHelper";
 import withNotification from "withNotification";
 import Errors from "./errors";
@@ -17,11 +16,41 @@ export function wrapFetch(fetch: fetchFunc, opts: Options = {}): fetchFunc {
     fetch = wrapNotifications(fetch);
   }
 
+  fetch = wrapTokenSafe(fetch);
+
   return (input, init) => getDecodeFetch(fetch, input, init);
+}
+
+function wrapTokenSafe(fetch: fetchFunc): fetchFunc {
+  return (input, init) => getTokenSafeFetch(fetch, input, init);
 }
 
 function wrapNotifications(fetch: fetchFunc): fetchFunc {
   return (input, init) => getNotificationsFetch(fetch, input, init);
+}
+
+async function getTokenSafeFetch(
+  fetch: fetchFunc,
+  input: RequestInfo,
+  init?: RequestInit | undefined
+) {
+  let token = authProviderHelper.getToken();
+
+  if (!token) {
+    return new Promise<Response>((resolve) => {
+      setTimeout(async () => {
+        token = authProviderHelper.getToken();
+
+        if (token) {
+          resolve(await fetch(input, init));
+        } else {
+          resolve(await getTokenSafeFetch(fetch, input, init));
+        }
+      }, 50);
+    });
+  }
+
+  return await fetch(input, init);
 }
 
 async function getNotificationsFetch(
@@ -60,7 +89,6 @@ async function getDecodeFetch(
 
   if (!res.ok) {
     if (res.status === 401) {
-      authProviderHelper.goLogin();
       throw new Errors.NotAuthorized(`Received a 401 from Decode.`);
     }
 

@@ -27,16 +27,23 @@ let fetchTokenIfNotExpiringSoon = () => {
   }
 };
 
+enum AuthState {
+  Initializing = "Initializing",
+  LoggedIn = "LoggedIn",
+  LoggedOut = "LoggedOut",
+}
+
 interface Context {
+  authState: AuthState;
   initialized?: boolean;
-  token: string;
+  token?: string;
   env?: string;
   onError(code: 401): void;
   logout(redirectUrl?: string): void;
 }
 
 export const AuthContext = React.createContext<Context>({
-  token: "",
+  authState: AuthState.Initializing,
   onError: () => {},
   logout: () => {},
 });
@@ -55,8 +62,8 @@ let AuthProvider: React.FC<Props> = ({
   env,
   children,
 }) => {
-  let [token, setToken] = useState("");
-  let [shouldRedirect, setShouldRedirect] = useState(false);
+  let [authState, setAuthState] = useState(AuthState.Initializing);
+  let [token, setToken] = useState<string | undefined>();
 
   useEffect(() => {
     authProviderHelper.init();
@@ -71,7 +78,7 @@ let AuthProvider: React.FC<Props> = ({
   let onError = (error: 401) => {
     switch (error) {
       case 401: {
-        setShouldRedirect(true);
+        // do nothing for now
         return;
       }
       default: {
@@ -92,21 +99,32 @@ let AuthProvider: React.FC<Props> = ({
         let search = encodeParams(rest);
         let url = search ? origin + pathname + "?" + search : origin + pathname;
         window.history.pushState({}, "", url);
+
         setToken(token); // hack -- set state after window.pushState() to force re-render
+        authProviderHelper.setToken(token);
+
+        setAuthState(AuthState.LoggedIn);
       } else if (storedToken) {
         setToken(storedToken);
+        authProviderHelper.setToken(storedToken);
+
+        setAuthState(AuthState.LoggedIn);
       } else {
-        setShouldRedirect(true);
+        setAuthState(AuthState.LoggedOut);
       }
     };
     doEffect();
   }, []);
 
   useEffect(() => {
-    if (shouldRedirect) {
-      authProviderHelper.goLogin();
+    if (authState === AuthState.LoggedOut) {
+      let orgAppendix = org ? `&org=${org}` : "";
+      window.location.href =
+        `https://api.decodeauth.com/auth/start?redirect_url=${window.encodeURIComponent(
+          window.location.href
+        )}` + orgAppendix;
     }
-  }, [shouldRedirect]);
+  }, [authState]);
 
   let logout = (redirectUrl?: string) => {
     delLocalStorage();
@@ -125,7 +143,7 @@ let AuthProvider: React.FC<Props> = ({
 
   return (
     <AuthContext.Provider
-      value={{ initialized: true, logout, token, env, onError }}
+      value={{ initialized: true, logout, token, env, onError, authState }}
     >
       <SWRConfig value={swrConfig ?? {}}>{children}</SWRConfig>
     </AuthContext.Provider>
