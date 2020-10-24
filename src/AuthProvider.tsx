@@ -42,6 +42,12 @@ enum AuthState {
   LoggedOut = "LoggedOut",
 }
 
+enum AuthState {
+  Initializing = "Initializing",
+  LoggedIn = "LoggedIn",
+  LoggedOut = "LoggedOut",
+}
+
 interface Context {
   authState: AuthState;
   initialized?: boolean;
