@@ -6,7 +6,7 @@ Decode is a full-stack toolkit for developing internal tools in React. Internal 
 
 You can logon to Decode and connect your HTTP APIs and databases. Then, you can write queries against those resources. For each query, Decode will provision a secure endpoint. You can read/write from that endpoint with Decode's client-side React SDK.
 
-## Overview - Let's build an app
+## Let's build an app
 
 In this tutorial, we're going to build a tool for a bank, Spacebank. This tool is used by the bank's risk team to mark transactions as _fishy_ 🐟. Admins work through a table of transactions that they can sort and filter. They can mark a transaction as fishy/not fishy:
 
