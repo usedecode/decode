@@ -19,23 +19,12 @@ let fetchTokenIfNotExpiringSoon = () => {
   let stored = getLocalStorage();
   if (stored) {
     try {
-      let { accessToken, expiresAt } = JSON.parse(stored);
-      if (expiresAt - Date.now() > oneMinute * 60) {
-        return accessToken;
+      let token = JSON.parse(stored);
+      if (token.expiresAt - Date.now() > oneMinute * 60) {
+        return token;
       }
     } catch (e) {}
   }
-};
-let getTokenExpiry = () => {
-  let stored = getLocalStorage();
-  if (stored) {
-    try {
-      let { expiresAt } = JSON.parse(stored);
-      return expiresAt;
-    } catch (e) {}
-  }
-
-  return -1;
 };
 
 enum AuthState {
@@ -76,7 +65,7 @@ let AuthProvider: React.FC<Props> = ({
   let [authState, setAuthState] = useState(AuthState.Initializing);
 
   let [token, setToken] = useState<string | undefined>();
-  let [tokenExpiry, setTokenExpiry] = useState<number>(-1);
+  let [tokenExpiry, setTokenExpiry] = useState<number>();
 
   useEffect(() => {
     authProviderHelper.init();
@@ -85,7 +74,7 @@ let AuthProvider: React.FC<Props> = ({
   useEffect(() => {
     let timeout: number;
 
-    if (tokenExpiry >= 0) {
+    if (tokenExpiry) {
       let tokenDuration = tokenExpiry - Date.now();
       timeout = window.setTimeout(
         () => setAuthState(AuthState.LoggedOut),
@@ -128,9 +117,9 @@ let AuthProvider: React.FC<Props> = ({
 
         setAuthState(AuthState.LoggedIn);
       } else if (storedToken) {
-        setToken(storedToken);
-        setTokenExpiry(getTokenExpiry());
-        authProviderHelper.setToken(storedToken);
+        setToken(storedToken.accessToken);
+        setTokenExpiry(storedToken.expiresAt);
+        authProviderHelper.setToken(storedToken.accessToken);
 
         setAuthState(AuthState.LoggedIn);
       } else {
