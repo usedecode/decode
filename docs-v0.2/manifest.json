@@ -6,7 +6,7 @@
       "routes": [
         {
           "title": "Getting Started",
-          "path": "/docs/start.md",
+          "path": "/docs-v0.2/start.md",
           "subheadings": [
             {
               "title": "Resources",
@@ -38,7 +38,7 @@
         },
         {
           "title": "Reference",
-          "path": "/docs/reference.md"
+          "path": "/docs-v0.2/reference.md"
         }
       ]
     }

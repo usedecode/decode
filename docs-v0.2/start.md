@@ -4,7 +4,7 @@
 
 Decode is a full-stack toolkit for developing internal tools in React. Internal tools are the stuff that employees at companies use, like customer support dashboards or ops tools.
 
-You can logon to Decode and connect your HTTP APIs and databases. Then, you can write queries against those resources. For each query, Decode will provision a special secure endpoint. You can read/write from that endpoint with Decode's client-side React SDK.
+You can logon to Decode and connect your HTTP APIs and databases. Then, you can write queries against those resources. For each query, Decode will provision a secure endpoint. You can read/write from that endpoint with Decode's client-side React SDK.
 
 ## Overview - Let's build an app
 
