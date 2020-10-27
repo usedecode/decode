@@ -169,7 +169,9 @@ Now that your tunnel is serving traffic to your local server, you just need to t
 
 We recommend setting up a new API in the Decode console that you'll use just for local development:
 
-![](./assets/reference/dashboard-admin-api-development.png)
+<div style="box-shadow: rgba(0, 0, 0, 0.12) 0px 5px 10px 0px; margin: 0px 25px;">
+  <img src="./assets/reference/dashboard-admin-api-development.png" />
+</div>
 
 After saving, traffic can now flow from your React app, through the Decode gateway, and to your local API server.
 
