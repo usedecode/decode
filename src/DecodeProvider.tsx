@@ -43,6 +43,7 @@ export const DecodeContext = React.createContext<Context>({
 interface Props {
   swrConfig?: ConfigInterface;
   cacheToken?: boolean;
+  token?: string;
   org?: string;
   env?: string;
 }
@@ -50,6 +51,7 @@ interface Props {
 let DecodeProvider: React.FC<Props> = ({
   swrConfig,
   cacheToken,
+  token: superimposedToken,
   org,
   env,
   children,
@@ -82,7 +84,9 @@ let DecodeProvider: React.FC<Props> = ({
       let storedToken = cacheToken && fetchTokenIfNotExpiringSoon();
       let { [code_param_name]: code, ...rest } = getParams();
 
-      if (code) {
+      if (superimposedToken) {
+        setToken(superimposedToken);
+      } else if (code) {
         let { token, expiresAt } = await exchangeCode(code as string);
         cacheToken && setLocalStorage(token, expiresAt);
         let { origin, pathname } = window.location;
