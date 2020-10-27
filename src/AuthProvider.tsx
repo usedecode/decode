@@ -19,19 +19,10 @@ let fetchTokenIfNotExpiringSoon = () => {
   let stored = getLocalStorage();
   if (stored) {
     try {
-      let { accessToken, expiresAt } = JSON.parse(stored);
-      if (expiresAt - Date.now() > oneMinute * 60) {
-        return accessToken;
+      let token = JSON.parse(stored);
+      if (token.expiresAt - Date.now() > oneMinute * 60) {
+        return token;
       }
-    } catch (e) {}
-  }
-};
-let getTokenExpiry = () => {
-  let stored = getLocalStorage();
-  if (stored) {
-    try {
-      let { expiresAt } = JSON.parse(stored);
-      return expiresAt;
     } catch (e) {}
   }
 };
@@ -72,7 +63,9 @@ let AuthProvider: React.FC<Props> = ({
   children,
 }) => {
   let [authState, setAuthState] = useState(AuthState.Initializing);
+
   let [token, setToken] = useState<string | undefined>();
+  let [tokenExpiry, setTokenExpiry] = useState<number>();
 
   useEffect(() => {
     authProviderHelper.init();
@@ -81,8 +74,8 @@ let AuthProvider: React.FC<Props> = ({
   useEffect(() => {
     let timeout: number;
 
-    if (token) {
-      let tokenDuration = getTokenExpiry() - Date.now();
+    if (tokenExpiry) {
+      let tokenDuration = tokenExpiry - Date.now();
       timeout = window.setTimeout(
         () => setAuthState(AuthState.LoggedOut),
         tokenDuration - 30
@@ -91,7 +84,7 @@ let AuthProvider: React.FC<Props> = ({
     return () => {
       timeout && clearTimeout(timeout);
     };
-  }, [token]);
+  }, [tokenExpiry]);
 
   let onError = (error: 401) => {
     switch (error) {
@@ -119,12 +112,14 @@ let AuthProvider: React.FC<Props> = ({
         window.history.pushState({}, "", url);
 
         setToken(token); // hack -- set state after window.pushState() to force re-render
+        setTokenExpiry(expiresAt);
         authProviderHelper.setToken(token);
 
         setAuthState(AuthState.LoggedIn);
       } else if (storedToken) {
-        setToken(storedToken);
-        authProviderHelper.setToken(storedToken);
+        setToken(storedToken.accessToken);
+        setTokenExpiry(storedToken.expiresAt);
+        authProviderHelper.setToken(storedToken.accessToken);
 
         setAuthState(AuthState.LoggedIn);
       } else {
