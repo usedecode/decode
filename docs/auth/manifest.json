@@ -3,7 +3,7 @@
     {
       "title": "Documentation",
       "heading": true,
-      "project": "tools",
+      "project": "decode",
       "routes": [
         {
           "title": "Getting Started",
@@ -40,41 +40,6 @@
         {
           "title": "Reference",
           "path": "/docs/reference.md"
-        }
-      ]
-    },
-    {
-      "title": "Documentation",
-      "heading": true,
-      "project": "auth",
-      "routes": [
-        {
-          "title": "Reference",
-          "path": "/docs/reference.md",
-          "subheadings": [
-            {
-              "title": "The Decode React library",
-              "anchor": "#the-decode-react-library",
-              "subheadings": [
-                {
-                  "title": "<AuthProvider />",
-                  "anchor": "#authprovider-"
-                },
-                {
-                  "title": "wrapFetch(fetch, opts)",
-                  "anchor": "#wrapfetch-fetch-opts-"
-                }
-              ]
-            },
-            {
-              "title": "Server-side middleware",
-              "anchor": "#server-side-middleware"
-            },
-            {
-              "title": "Developing locally",
-              "anchor": "#developing-locally"
-            }
-          ]
         }
       ]
     }

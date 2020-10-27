@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import Loading from "Loading";
-import { ConfigInterface, SWRConfig } from "swr";
 import { authProviderHelper } from "authProviderHelper";
 
 const code_param_name = "__decode_code";
@@ -49,19 +48,11 @@ export const AuthContext = React.createContext<Context>({
 });
 
 interface Props {
-  swrConfig?: ConfigInterface;
   cacheToken?: boolean;
   org?: string;
-  env?: string;
 }
 
-let AuthProvider: React.FC<Props> = ({
-  swrConfig,
-  cacheToken = true,
-  org,
-  env,
-  children,
-}) => {
+let AuthProvider: React.FC<Props> = ({ cacheToken = true, org, children }) => {
   let [authState, setAuthState] = useState(AuthState.Initializing);
 
   let [token, setToken] = useState<string | undefined>();
@@ -156,9 +147,9 @@ let AuthProvider: React.FC<Props> = ({
 
   return (
     <AuthContext.Provider
-      value={{ initialized: true, logout, token, env, onError, authState }}
+      value={{ initialized: true, logout, token, onError, authState }}
     >
-      <SWRConfig value={swrConfig ?? {}}>{children}</SWRConfig>
+      {children}
     </AuthContext.Provider>
   );
 };
