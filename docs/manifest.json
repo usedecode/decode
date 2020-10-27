@@ -7,7 +7,7 @@
       "routes": [
         {
           "title": "Getting Started",
-          "path": "/docs/start.md",
+          "path": "/docs/tools/start.md",
           "subheadings": [
             {
               "title": "Resources",
@@ -39,7 +39,7 @@
         },
         {
           "title": "Reference",
-          "path": "/docs/reference.md"
+          "path": "/docs/tools/reference.md"
         }
       ]
     },
@@ -50,7 +50,7 @@
       "routes": [
         {
           "title": "Reference",
-          "path": "/docs/reference.md",
+          "path": "/docs/auth/reference.md",
           "subheadings": [
             {
               "title": "The Decode React library",
