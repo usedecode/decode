@@ -3,6 +3,7 @@
     {
       "title": "Documentation",
       "heading": true,
+      "project": "decode",
       "routes": [
         {
           "title": "Getting Started",
