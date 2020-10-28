@@ -134,8 +134,8 @@ The installation process for server-side middleware takes under 5 minutes:
 
 We currently have middleware for Node.js and Elixir. We'll refer you to the READMEs of each for installation instructions (in all cases, it's a piece of cake):
 
-- [Node/Express](#TODO)
-- [Elixir/Phoenix](#TODO)
+- [Node/Express](https://github.com/usedecode/decode_server/tree/master/decode_server_js)
+- [Elixir/Phoenix](https://github.com/usedecode/decode_server/tree/master/decode_server_ex)
 
 > We're releasing libraries for Python/Django, Ruby/Rails, and Go throughout November 2020, with more coming in December. <a class="docs-help" href="mailto:founders@decodeauth.com">Let us know</a> which library you want to see support for and we'll prioritize it!
 
