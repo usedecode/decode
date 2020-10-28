@@ -119,6 +119,20 @@ This can be handy for internal tools where you want to make it clear to the user
 
 > Do you want to see wrappers for other fetching libraries, like Axios? Do us a favor and <a class="docs-help" href="mailto:founders@decodeauth.com">click here</a> to let us know.
 
+## The Decode console
+
+The Decode console is where you create and manage users and APIs. Specifically, you control authorization through _Rules_ - dictating who can do what.
+
+Here's an example of an API with a single rule - one that grants Paul read-only access to `/users/*`:
+
+<img src="./assets/reference/rules-demo.png" height=200 />
+
+Here's a quick 3 minute demonstration of the console and configuring Rules:
+
+<div style="position: relative; padding-bottom: 50.373134328358205%; height: 0;"><iframe src="https://www.loom.com/embed/a6029546beff432ca776e148902d4ab7" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
+
+You can add users to your Decode org, create groups of users, and then control how both groups and users can interact with your api.
+
 ## Server-side middleware
 
 If you're building a new API or want to make maintenance of your current API easier, we recommend you use our server-side middleware to wrap your API in authentication.
