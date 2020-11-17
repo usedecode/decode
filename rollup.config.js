@@ -3,7 +3,7 @@ import nodeResolve from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
 import autoprefixer from "autoprefixer";
 import postcss from "rollup-plugin-postcss";
-import json from '@rollup/plugin-json';
+import json from "@rollup/plugin-json";
 
 const config = () => ({
   input: "src/index.ts",
