@@ -6,7 +6,6 @@ class AuthProviderHelper {
     this.initalized = true;
   }
 
-
   public __internal_getToken() {
     return this.token;
   }
