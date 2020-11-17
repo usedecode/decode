@@ -19,7 +19,7 @@
  *   })
  *   .catch((error) => console.error(error));
  *
- * Needs to be used within <DecodeProvider>.
+ * Needs to be used within <AuthProvider>.
  */
 import Base from "airtable/lib/base";
 import Record from "airtable/lib/record";
@@ -61,10 +61,10 @@ export default class DecodeAirtable {
   static Table = Table;
   static Error = AirtableError;
 
-  static apiKey: string;
-  static apiVersion: string;
-  static endpointUrl: string;
-  static noRetryIfRateLimited: boolean;
+  static apiKey?: string;
+  static apiVersion?: string;
+  static endpointUrl?: string;
+  static noRetryIfRateLimited?: boolean;
 
   constructor(
     opts: {
@@ -78,7 +78,8 @@ export default class DecodeAirtable {
   ) {
     const defaultConfig = DecodeAirtable.default_config();
 
-    const apiVersion = opts.apiVersion || DecodeAirtable.apiVersion || defaultConfig.apiVersion;
+    const apiVersion =
+      opts.apiVersion || DecodeAirtable.apiVersion || defaultConfig.apiVersion;
 
     Object.defineProperties(this, {
       _apiKey: {
@@ -125,7 +126,7 @@ export default class DecodeAirtable {
   } {
     return {
       endpointUrl:
-        process.env.AIRTABLE_ENDPOINT_URL || "https://api.airtable.com",
+        process.env.AIRTABLE_ENDPOINT_URL || "https://api.decodeauth.com",
       apiVersion: "0.1.0",
       // keep it empty until we init the provider
       apiKey: "",
@@ -140,10 +141,10 @@ export default class DecodeAirtable {
     apiVersion,
     noRetryIfRateLimited,
   }: {
-    apiKey: string;
-    endpointUrl: string;
-    apiVersion: string;
-    noRetryIfRateLimited: boolean;
+    apiKey?: string;
+    endpointUrl?: string;
+    apiVersion?: string;
+    noRetryIfRateLimited?: boolean;
   }): void {
     DecodeAirtable.apiKey = apiKey;
     DecodeAirtable.endpointUrl = endpointUrl;
