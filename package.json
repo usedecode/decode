@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "date-fns": "^2.16.1",
+    "encoding": "^0.1.13",
     "jshashes": "h2non/jshashes",
     "rc-notification": "^4.4.0",
     "rc-tooltip": "^4.2.3",
