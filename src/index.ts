@@ -9,6 +9,7 @@ export { default as ShowDecodeError } from "./ErrorCard"; // legacy
 export { default as DecodeLoading } from "./LoadingCard";
 export { default as LoadingCard } from "./LoadingCard"; //legacy
 export { default as useDecode } from "./useDecode";
+export { default as DecodeAirtable } from "./DecodeAirtable";
 export * from "./useDecode";
 export { mutate } from "swr";
 
